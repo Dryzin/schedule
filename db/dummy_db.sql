@@ -45,13 +45,95 @@ CREATE TABLE calendario_de_aula (
 id INT AUTO_INCREMENT PRIMARY KEY,
 ra_docente INT,
 id_uc INT,
-horario_inicio DATETIME,
-horario_fim DATETIME,
+horario_inicio DATETIME NOT NULL,
+horario_fim DATETIME DEFAULT NULL,
 UNIQUE (ra_docente, horario_inicio, horario_fim),
 UNIQUE (id_uc, horario_inicio, horario_fim),
 FOREIGN KEY (ra_docente) REFERENCES docentes (ra),
 FOREIGN KEY (id_uc) REFERENCES uc (id)
 );
+
+DELIMITER $$
+
+#criação de uma regra(trigger) para o tempo que for determinado. (ex: caso a aula seja iniciada 07:30 e acabada 11:30, ele preencherá os horaríos 8:30-9:30 e assim por diante)
+CREATE TRIGGER check_conflito_horario
+BEFORE INSERT ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+IF EXISTS (
+SELECT *
+FROM calendario_de_aula
+WHERE ra_docente = NEW.ra_docente
+AND ((NEW.horario_inicio BETWEEN horario_inicio AND horario_fim)
+OR (NEW.horario_fim BETWEEN horario_inicio AND horario_fim)
+OR (NEW.horario_inicio < horario_inicio AND NEW.horario_fim > horario_fim))
+) THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Professor já está ocupado em outro horário no mesmo período.';
+END IF;
+END$$
+
+#crição de regra(trigger) para descontar 4 horas de aula a cada aula (descontando ao mesmo tempo a carga horária da uc e da turma).
+CREATE TRIGGER update_carga_horaria
+AFTER INSERT ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+UPDATE uc
+SET carga_horaria = carga_horaria - INTERVAL 4 HOUR
+WHERE id = NEW.id_uc;
+
+UPDATE turma
+SET carga_horaria = carga_horaria - INTERVAL 4 HOUR
+WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
+END$$
+
+#criação de regra(trigger) para que a UC não seja maior do que a turma! (Ex: se a turma foi definida para ter 1500 horas, não terá como acrescentar).
+CREATE TRIGGER check_carga_horaria_uc
+BEFORE INSERT ON uc
+FOR EACH ROW
+BEGIN
+IF NEW.carga_horaria > (SELECT carga_horaria FROM turma WHERE id = NEW.num_turma) THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Carga horária da UC não pode ser maior do que a da Turma.';
+END IF;
+END$$
+
+#criação de regras(trigger) para fazer o cálculo unitário de cada UC para que seja verificado se não vai ultrapassar a carga horária total. 
+CREATE TRIGGER ck_carga_horaria_uc_before_insert 
+BEFORE INSERT ON uc
+FOR EACH ROW
+BEGIN
+  IF (SELECT SUM(carga_horaria) FROM uc WHERE num_turma = NEW.num_turma) + NEW.carga_horaria > 
+    (SELECT carga_horaria FROM turma WHERE id = NEW.num_turma)
+  THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'A soma da carga horária das UCs não pode ser maior que a carga horária da turma';
+  END IF;
+END;
+
+#criação de uma regra(trigger) para que possa ser realizado um update de carga horária, mas se ultrapassar, ele bloqueia.
+CREATE TRIGGER ck_carga_horaria_uc_before_update
+BEFORE UPDATE ON uc
+FOR EACH ROW
+BEGIN
+  IF (SELECT SUM(carga_horaria) FROM uc WHERE num_turma = NEW.num_turma AND id <> NEW.id) + NEW.carga_horaria > 
+      (SELECT carga_horaria FROM turma WHERE id = NEW.num_turma) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Carga horária da UC não pode ser maior do que a da Turma.';
+  END IF;
+END$$
+
+#criação de regra(trigger) para que apenas docentes sejam adicionados na tabela docentes.
+CREATE TRIGGER check_tipo_usuario_before_insert
+BEFORE INSERT ON docentes
+FOR EACH ROW
+BEGIN
+IF (SELECT tipo FROM usuario WHERE id = NEW.usuario_id) != 'docente' THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT = 'Somente usuários do tipo "docente" podem ser inseridos na tabela "docentes".';
+END IF;
+END$$
+
+DELIMITER ;
 
 #INSERTS
 INSERT INTO usuario (nome, cpf, tipo)

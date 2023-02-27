@@ -78,11 +78,11 @@
                             <form action="save_schedule.php" method="post" id="schedule-form">
                                 <input type="hidden" name="id" value="">
                                 <div class="form-group mb-2">
-                                    <label for="title" class="control-label">Titulo</label>
+                                    <label for="title" class="control-label">RA</label>
                                     <input type="text" class="form-control form-control-sm rounded-0" name="title" id="title" required>
                                 </div>
                                 <div class="form-group mb-2">
-                                    <label for="description" class="control-label">Descrição</label>
+                                    <label for="description" class="control-label">ID (Unidade)</label>
                                     <textarea rows="3" class="form-control form-control-sm rounded-0" name="description" id="description" required></textarea>
                                 </div>
                                 <div class="form-group mb-2">
