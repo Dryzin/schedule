@@ -107,7 +107,7 @@ BEGIN
   THEN
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'A soma da carga horária das UCs não pode ser maior que a carga horária da turma';
   END IF;
-END;
+END$$
 
 
 CREATE TRIGGER ck_carga_horaria_uc_before_update
