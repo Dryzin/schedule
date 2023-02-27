@@ -55,7 +55,6 @@ FOREIGN KEY (id_uc) REFERENCES uc (id)
 
 DELIMITER $$
 
-#criação de uma regra(trigger) para o tempo que for determinado. (ex: caso a aula seja iniciada 07:30 e acabada 11:30, ele preencherá os horaríos 8:30-9:30 e assim por diante)
 CREATE TRIGGER check_conflito_horario
 BEFORE INSERT ON calendario_de_aula
 FOR EACH ROW
@@ -73,7 +72,7 @@ SET MESSAGE_TEXT = 'Professor já está ocupado em outro horário no mesmo perí
 END IF;
 END$$
 
-#crição de regra(trigger) para descontar 4 horas de aula a cada aula (descontando ao mesmo tempo a carga horária da uc e da turma).
+
 CREATE TRIGGER update_carga_horaria
 AFTER INSERT ON calendario_de_aula
 FOR EACH ROW
@@ -87,7 +86,7 @@ SET carga_horaria = carga_horaria - INTERVAL 4 HOUR
 WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
 END$$
 
-#criação de regra(trigger) para que a UC não seja maior do que a turma! (Ex: se a turma foi definida para ter 1500 horas, não terá como acrescentar).
+
 CREATE TRIGGER check_carga_horaria_uc
 BEFORE INSERT ON uc
 FOR EACH ROW
@@ -98,7 +97,7 @@ SET MESSAGE_TEXT = 'Carga horária da UC não pode ser maior do que a da Turma.'
 END IF;
 END$$
 
-#criação de regras(trigger) para fazer o cálculo unitário de cada UC para que seja verificado se não vai ultrapassar a carga horária total. 
+ 
 CREATE TRIGGER ck_carga_horaria_uc_before_insert 
 BEFORE INSERT ON uc
 FOR EACH ROW
@@ -110,7 +109,7 @@ BEGIN
   END IF;
 END;
 
-#criação de uma regra(trigger) para que possa ser realizado um update de carga horária, mas se ultrapassar, ele bloqueia.
+
 CREATE TRIGGER ck_carga_horaria_uc_before_update
 BEFORE UPDATE ON uc
 FOR EACH ROW
@@ -122,7 +121,7 @@ BEGIN
   END IF;
 END$$
 
-#criação de regra(trigger) para que apenas docentes sejam adicionados na tabela docentes.
+
 CREATE TRIGGER check_tipo_usuario_before_insert
 BEFORE INSERT ON docentes
 FOR EACH ROW
