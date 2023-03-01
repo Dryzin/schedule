@@ -6,7 +6,6 @@ $(function() {
         Object.keys(scheds).map(k => {
             var row = scheds[k]
             events.push({ id: row.id, title: row.ra_docente, start: row.horario_inicio, end: row.horario_fim });
-
         })
     }
     var date = new Date()
