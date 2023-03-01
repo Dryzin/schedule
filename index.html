@@ -10,63 +10,51 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="fullcalendar/lib/main.min.css">
+    <link rel="stylesheet" href="./css/test.css">
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="fullcalendar/lib/main.min.js"></script>
     <script src='js/pt-br.js'></script>
     <style>
-        :root {
-            --bs-success-rgb: 71, 222, 152 !important;
-        }
+    .fc-today-button {
+        background-color: #00ff04;
+        color: #fff;
 
-        html,
-        body {
-            height: 100%;
-            width: 100%;
-            font-family: roboto;
-        }
-
-        .btn-info.text-light:hover,
-        .btn-info.text-light:focus {
-            background: #000;
-        }
-        table, tbody, td, tfoot, th, thead, tr {
-            border-color: #ededed !important;
-            border-style: solid;
-            border-width: 1px !important;
-        }
-
-        ul li{
-            list-style:none;
-            position: inline-block;
-            float:left;
-            color:#fff;
-            padding:  0 0 0 30px;
-        }
-    </style>
+      }
+</style>
 </head>
 
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient" id="topNavBar">
-        <div class="container">
-            <a class="navbar-brand" href="https://mg.senac.br">
-            Senac
-            </a>
 
-            <div>
-                <ul>
-                    <li>Home</li>
-                    <li>Aulas</li>
-                    <li>Docente</li>
-                    <li>Cursos</li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<body class="bg-light">
+    <div class="navegation">
+        <nav>
+            <input type="checkbox" id="nav-toggle">
+            <div class="logo"> <h1>Ca<span1>l</span1><span>l</span>endar</h1></div>
+           <ul class="links">
+               <li><a href="#home">Home</a></li>
+               <li><a href="#about">Calendário</a></li>
+               <li><a href="#work">Cursos</a></li>
+               <li><a href="#contact">Docente</a></li>
+           </ul>
+           <label for="nav-toggle" class="icon-burger">
+               <div class="line"></div>
+               <div class="line"></div>
+               <div class="line"></div>
+           </label>
+        </nav>
+    
+        <label for="nav-toggle" class="icon-burger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </label>
+    
+    </div>
     <div class="container py-5" id="page-container">
         <div class="row">
             <div class="col-md-9">
-                <div id="calendar"></div>
+                <div id="calendar"
+                ></div>
             </div>
             <div class="col-md-3">
                 <div class="cardt rounded-0 shadow">
@@ -79,19 +67,19 @@
                                 <input type="hidden" name="id" value="">
                                 <div class="form-group mb-2">
                                     <label for="title" class="control-label">RA</label>
-                                    <input type="text" class="form-control form-control-sm rounded-0" name="title" id="title" required>
+                                    <input type="text" class="form-control form-control-sm rounded-0 test" name="title" id="title" required>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="description" class="control-label">ID (Unidade)</label>
-                                    <textarea rows="3" class="form-control form-control-sm rounded-0" name="description" id="description" required></textarea>
+                                    <textarea rows="3" class="form-control form-control-sm rounded-0 test" name="description" id="description" required></textarea>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="start_datetime" class="control-label">Começo</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="start_datetime" id="start_datetime" required>
+                                    <input type="datetime-local" class="form-control form-control-sm rounded-0 test" name="start_datetime" id="start_datetime" required>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Fim</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
+                                    <input type="datetime-local" class="form-control form-control-sm rounded-0 test" name="end_datetime" id="end_datetime" required>
                                 </div>
                             </form>
                         </div>
