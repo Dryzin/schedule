@@ -1,7 +1,7 @@
 <?php require_once('db-connect.php') ?>
 <!DOCTYPE html>
 <html lang="pt-br">
-
+<!-- Teste commit brash -->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
