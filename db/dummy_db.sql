@@ -13,9 +13,10 @@ SET time_zone = "+00:00";
 
 #criação de uma tabela
 CREATE TABLE usuario (
-id INT AUTO_INCREMENT PRIMARY KEY,
+id INT PRIMARY KEY,
 nome VARCHAR(255),
-cpf VARCHAR(255),
+email VARCHAR(50) UNIQUE NOT NULL,
+senha VARCHAR(32) NOT NULL,
 tipo ENUM('docente', 'administrador')
 );
 
@@ -72,20 +73,21 @@ SET MESSAGE_TEXT = 'Professor já está ocupado em outro horário no mesmo perí
 END IF;
 END$$
 
-
 CREATE TRIGGER update_carga_horaria
 AFTER INSERT ON calendario_de_aula
 FOR EACH ROW
 BEGIN
-UPDATE uc
-SET carga_horaria = carga_horaria - INTERVAL 4 HOUR
-WHERE id = NEW.id_uc;
+    DECLARE carga_horaria_aula INT;
+    SET carga_horaria_aula = TIMESTAMPDIFF(HOUR, NEW.horario_inicio, NEW.horario_fim);
 
-UPDATE turma
-SET carga_horaria = carga_horaria - INTERVAL 4 HOUR
-WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
+    UPDATE uc
+    SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
+    WHERE id = NEW.id_uc;
+
+    UPDATE turma
+    SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
+    WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
 END$$
-
 
 CREATE TRIGGER check_carga_horaria_uc
 BEFORE INSERT ON uc
@@ -135,11 +137,11 @@ END$$
 DELIMITER ;
 
 #INSERTS
-INSERT INTO usuario (nome, cpf, tipo)
-VALUES ('João da Silva', '111.111.111-11', 'administrador'), ('Matheus', '222.222.222-22', 'docente'), ('Cadu', '333.333.333-33', 'docente');
+INSERT INTO usuario (id, nome, email, senha, tipo)
+VALUES ('1001','João da Silva','joao@', '123', 'administrador'), ('1002','Matheus','matheus@', '123', 'docente'), ('1003','Cadu','cadu@', '123', 'docente');
 
 INSERT INTO docentes (ra, usuario_id)
-VALUES (1002, 2), (1003, 3);
+VALUES (1002, 1002), (1003, 1003);
 
 INSERT INTO turma (id, nome, tipo, carga_horaria)
 VALUES
