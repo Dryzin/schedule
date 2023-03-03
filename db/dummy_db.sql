@@ -73,7 +73,7 @@ SET MESSAGE_TEXT = 'Professor já está ocupado em outro horário no mesmo perí
 END IF;
 END$$
 
-CREATE TRIGGER update_carga_horaria
+CREATE TRIGGER INSERT_carga_horaria
 AFTER INSERT ON calendario_de_aula
 FOR EACH ROW
 BEGIN
@@ -87,6 +87,48 @@ BEGIN
     UPDATE turma
     SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
     WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
+END$$
+
+CREATE TRIGGER update_carga_horaria_update
+AFTER UPDATE ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    DECLARE carga_horaria_aula INT;
+    SET carga_horaria_aula = TIMESTAMPDIFF(HOUR, OLD.horario_inicio, OLD.horario_fim);
+
+    UPDATE uc
+    SET carga_horaria = carga_horaria + INTERVAL carga_horaria_aula HOUR
+    WHERE id = OLD.id_uc;
+
+    UPDATE turma
+    SET carga_horaria = carga_horaria + INTERVAL carga_horaria_aula HOUR
+    WHERE id = (SELECT num_turma FROM uc WHERE id = OLD.id_uc);
+
+    SET carga_horaria_aula = TIMESTAMPDIFF(HOUR, NEW.horario_inicio, NEW.horario_fim);
+
+    UPDATE uc
+    SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
+    WHERE id = NEW.id_uc;
+
+    UPDATE turma
+    SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
+    WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
+END$$
+
+CREATE TRIGGER delete_carga_horaria
+AFTER DELETE ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    DECLARE carga_horaria_aula INT;
+    SET carga_horaria_aula = TIMESTAMPDIFF(HOUR, OLD.horario_inicio, OLD.horario_fim);
+
+    UPDATE uc
+    SET carga_horaria = carga_horaria + INTERVAL carga_horaria_aula HOUR
+    WHERE id = OLD.id_uc;
+
+    UPDATE turma
+    SET carga_horaria = carga_horaria + INTERVAL carga_horaria_aula HOUR
+    WHERE id = (SELECT num_turma FROM uc WHERE id = OLD.id_uc);
 END$$
 
 CREATE TRIGGER check_carga_horaria_uc
