@@ -2,14 +2,23 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <!-- Teste commit brash -->
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scheduling</title>
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="fullcalendar/lib/main.min.css">
+
+     <!-- teste de fazer um popup apareca e depois some e da um reset na pagina de salvar e deletar-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-CtCzRfZlMEvJzFpKkAl97SlNf1ysh3/nqK/O47XQ2NlA/h8zv+QlLx0cZdHw78W8evv+E0g0Xr85tHrT0Z8RvA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="sha512-Gi7RveP32a9p7VU1OWaqcWfZiFGmpn4n4+hGKnIMHmAT8yvy/KPlm9mSdFzsB6ZcJdjmnFca0If0I4d4wSMkCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+     <!-- teste de fazer um popup apareca e depois some e da um reset na pagina de salvar e deletar-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> <!-- Script para que os inputs quando selecionados ja preencherem -->
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="fullcalendar/lib/main.min.js"></script>
@@ -30,27 +39,35 @@
         .btn-info.text-light:focus {
             background: #000;
         }
-        table, tbody, td, tfoot, th, thead, tr {
+
+        table,
+        tbody,
+        td,
+        tfoot,
+        th,
+        thead,
+        tr {
             border-color: #ededed !important;
             border-style: solid;
             border-width: 1px !important;
         }
 
-        ul li{
-            list-style:none;
+        ul li {
+            list-style: none;
             position: inline-block;
-            float:left;
-            color:#fff;
-            padding:  0 0 0 30px;
+            float: left;
+            color: #fff;
+            padding: 0 0 0 30px;
         }
     </style>
 </head>
+
 
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient" id="topNavBar">
         <div class="container">
             <a class="navbar-brand" href="https://mg.senac.br">
-            Senac
+                Senac
             </a>
 
             <div>
@@ -64,6 +81,53 @@
         </div>
     </nav>
     <div class="container py-5" id="page-container">
+
+        <!-- teste de fazer um popup apareca e depois some e da um reset na pagina -->
+
+
+        <!-- <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+            Agendamento salvo com sucesso!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div> -->
+
+        <div id="success-modal" class="modal fade" tabindex="-1" aria-labelledby="success-modal-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="success-modal-label">Agendamento salvo com sucesso!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Pagina sera resetada!
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- teste de fazer um popup apareca e depois some e da um reset na pagina -->
+
+        <!-- teste de fazer um popup de delete -->
+        <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="delete-modal-label" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delete-modal-label">Deletar evento agendado</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza de que deseja excluir este evento agendado?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirm-delete">Excluir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- teste de fazer um popup de delete -->
+
+
         <div class="row">
             <div class="col-md-9">
                 <div id="calendar"></div>
@@ -106,6 +170,7 @@
             </div>
         </div>
     </div>
+
     <!-- Event Details Modal -->
     <div class="modal fade" tabindex="-1" data-bs-backdrop="static" id="event-details-modal">
         <div class="modal-dialog modal-dialog-centered">
@@ -138,21 +203,24 @@
             </div>
         </div>
     </div>
+
+
     <!-- Event Details Modal -->
 
-<?php 
-locale: 'pt-br';
-$schedules = $conn->query("SELECT * FROM `calendario_de_aula`");
-$sched_res = [];
-foreach($schedules->fetch_all(MYSQLI_ASSOC) as $row){
-    $row['sdate'] = date("F d, Y h:i A",strtotime($row['horario_inicio']));
-    $row['edate'] = date("F d, Y h:i A",strtotime($row['horario_fim']));
-    $sched_res[$row['id']] = $row;
-}
-?>
-<?php 
-if(isset($conn)) $conn->close();
-?>
+    <?php
+    locale:
+    'pt-br';
+    $schedules = $conn->query("SELECT * FROM `calendario_de_aula`");
+    $sched_res = [];
+    foreach ($schedules->fetch_all(MYSQLI_ASSOC) as $row) {
+        $row['sdate'] = date("F d, Y h:i A", strtotime($row['horario_inicio']));
+        $row['edate'] = date("F d, Y h:i A", strtotime($row['horario_fim']));
+        $sched_res[$row['id']] = $row;
+    }
+    ?>
+    <?php
+    if (isset($conn)) $conn->close();
+    ?>
 </body>
 <script>
     var scheds = $.parseJSON('<?= json_encode($sched_res) ?>')

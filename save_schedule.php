@@ -13,15 +13,48 @@ if(empty($id)){
 }else{
     $sql = "UPDATE `calendario_de_aula` set `ra_docente` = '{$title}', `id_uc` = '{$description}', `horario_inicio` = '{$start_datetime}', `horario_fim` = '{$end_datetime}' where `id` = '{$id}'";
 }
-$save = $conn->query($sql);
-if($save){
-    echo "<script> alert('Schedule Successfully Saved.'); location.replace('./') </script>";
-}else{
-    echo "<pre>";
-    echo "An Error occured.<br>";
-    echo "Error: ".$conn->error."<br>";
-    echo "SQL: ".$sql."<br>";
-    echo "</pre>";
-}
+$save = $conn->query($sql); //teste de poupa
+// if ($save) {
+//     // exibe a mensagem de sucesso em um popup
+//     echo "<div id='success-popup' class='popup'>
+//             <div class='popup-message'>Cadastro realizado com sucesso.</div>
+//           </div>";
+//     echo "<script>
+//             // fecha o popup após 3 segundos
+//             setTimeout(function() {
+//               var popup = document.getElementById('success-popup');
+//               popup.style.display = 'none';
+//             }, 3000);
+  
+//             // redireciona para a página inicial após o popup ser fechado
+//             setTimeout(function() {
+//               window.location.href = 'index.php';
+//             }, 3500);
+//           </script>";
+//   } else {
+//     // exibe a mensagem de erro em um popup
+//     echo "<div id='error-popup' class='popup'>
+//             <div class='popup-message'>Erro ao realizar cadastro.</div>
+//           </div>";
+//     echo "<script>
+//             // fecha o popup após 3 segundos
+//             setTimeout(function() {
+//               var popup = document.getElementById('error-popup');
+//               popup.style.display = 'none';
+//             }, 3000);
+  
+//             // recarrega a página atual após o popup ser fechado
+//             setTimeout(function() {
+//               window.location.reload();
+//             }, 3500);
+//           </script>";
+//   }
+  
+
 $conn->close();
+
+// // redireciona o usuário para a página inicial
+header("Location: http://localhost/schedule/"); // substitua a barra com a URL da sua página inicial
+exit();
+
 ?>
