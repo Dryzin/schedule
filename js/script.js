@@ -50,13 +50,21 @@ $(function () {
 
 
         eventClick: function (info) {
+            // Carregue o idioma português para o moment.js
+            moment.locale('pt-br');
             var _details = $('#event-details-modal')
             var id = info.event.id
+
             if (!!scheds[id]) {
                 _details.find('#title').text(scheds[id].ra_docente)
                 _details.find('#description').text(scheds[id].id_uc)
-                _details.find('#start').text(scheds[id].sdate)
-                _details.find('#end').text(scheds[id].edate)
+
+                // Formate as datas usando o moment.js
+                var startDate = moment(scheds[id].sdate).format('LLL');
+                var endDate = moment(scheds[id].edate).format('LLL');
+
+                _details.find('#start').text(startDate)
+                _details.find('#end').text(endDate)
                 _details.find('#edit,#delete').attr('data-id', id)
                 _details.modal('show')
             } else {
@@ -93,7 +101,7 @@ $(function () {
                 // exibe a mensagem de sucesso na caixa de diálogo
                 $('#success-modal').modal('show');
 
-                $('#schedule-form').show().fadeOut(5000, function () {
+                $('#schedule-form').show().fadeOut(3000, function () {
                     // recarrega a página após a mensagem desaparecer
                     location.reload();
                 });
@@ -104,35 +112,36 @@ $(function () {
     });
 
 
-    
+
     //teste de fazer um popup apareca e depois some e da um reset na pagina de deletar
     $('#delete').click(function () {
         var id = $(this).attr('data-id');
         if (!!scheds[id]) {
             $('#event-details-modal').modal('hide');
             $('#delete-modal').modal('show');
-            $('#confirm-delete').click(function() {
-                location.href = "./delete_schedule.php?id=" + id; 
+            $('#confirm-delete').click(function () {
+                location.href = "./delete_schedule.php?id=" + id;
             });
-            $('#delete-modal').on('hidden.bs.modal', function (e) { 
+            $('#delete-modal').on('hidden.bs.modal', function (e) {
                 $('#event-details-modal').modal('show');
             });
             $('#delete-modal').on('shown.bs.modal', function (e) { // ele faz que quando cancelar ele volta para a tela de editar
                 $('#confirm-delete').focus();
             });
-            $('#delete-modal .close').click(function() { // ele faz que quando cancelar ele volta para a tela de editar
+            $('#delete-modal .close').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
                 $('#delete-modal').modal('hide');
             });
-            $('#delete-modal .btn-secondary').click(function() { // ele faz que quando cancelar ele volta para a tela de editar
+            $('#delete-modal .btn-secondary').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
                 $('#delete-modal').modal('hide');
             });
         } else {
             alert("Evento não definido");
         }
     });
-    
-    
-      
+
+
+    // exibir as datas formatadas em português
+
 
     // $('#schedule-form').on('submit', function(e) {
     //     e.preventDefault();
