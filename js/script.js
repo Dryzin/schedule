@@ -21,9 +21,11 @@ $(function () {
             locale: 'pt-br'
         },
         locale: 'pt-br',
+        navLinks: true, // can click day/week names to navigate views
         selectable: true, // inicio do evento de select de varias datas e ja preenchar os inputs da data inicio e fim
         editable: true, // inicio evento de fazer as edições
         droppable: true,  // inicio evento que pode arrastar datas 
+        dayMaxEvents: true, // allow "more" link when too many events
         themeSystem: 'bootstrap',
         //Random default events
         events: events,
@@ -84,6 +86,7 @@ $(function () {
         }
     });
 
+
     calendar.render();
 
 
@@ -110,6 +113,7 @@ $(function () {
             }
         });
     });
+
 
 
 
@@ -140,9 +144,108 @@ $(function () {
     });
 
 
-    // exibir as datas formatadas em português
+    // teste de api de feriados
+    getFeriados().then(function (feriados) {
+        $.each(feriados, function (index, feriado) {
+            // cria um objeto de evento para cada feriado
+            var event = {
+                title: feriado.nome,
+                start: feriado.data,
+                allDay: true,
+                backgroundColor: '#f00',// fundo vermelho
+                textColor: '#fff' // texto em branco
+            };
+            // adiciona o objeto de evento à lista de eventos do calendário
+            calendar.addEvent(event);
+        });
+    });
+
+    // Aqui ele acha a api de feriados
+    function getFeriados() {
+        return $.ajax({
+            url: 'http://localhost/schedule/api_feriado.php',
+            dataType: 'json',
+            success: function (response) {
+                return response;
+            }
+        });
+    }
+    // teste de api de feriados
+
+    // teste  de impeca de criar aula em feriados:
+    $(document).ready(function () {
+        // Adicionar ouvinte de evento ao botão salvar
+        $('#save-btn').click(function () {
+            var start_date = new Date($('#start_datetime').val());
+            var year = start_date.getFullYear();
+            var month = start_date.getMonth() + 1;
+            var day = start_date.getDate();
+            var is_holiday = getFeriados(year, month, day);
+
+            if (is_holiday) {
+                $('#feriado-modal').modal('show');
+            } else {
+                $('#schedule-form').submit(); // Envia o formulário
+            }
+            $('#feriado-modal .close').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
+                $('#feriado-modal').modal('hide');
+            });
+            $('#feriado-modal .close, #feriado-modal .modal-footer button').click(function () {
+                $('#feriado-modal').modal('hide');
+            });
+            
+
+        });
+
+        //Função que retorna true se a data for feriado
+        function getFeriados(year, month, day) {
+            var holidays = {
+                '01-01': 'Ano Novo',
+                '02-20': 'Carnaval',
+                '02-21': 'Carnaval',
+                '02-22': 'Carnaval',
+                '04-21': 'Tiradentes',
+                '05-01': 'Dia do Trabalho',
+                '09-07': 'Independência do Brasil',
+                '10-12': 'Nossa Senhora Aparecida',
+                '11-02': 'Finados',
+                '11-15': 'Proclamação da República',
+                '12-25': 'Natal'
+            };
+
+            var holiday = false;
+            var date_string = year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day;
+
+            for (var d in holidays) {
+                var holiday_date = year + '-' + d;
+                if (holiday_date === date_string) {
+                    holiday = true;
+                    break;
+                }
+            }
+
+            return holiday;
+        }
+    });
 
 
+    // teste  de impeca de criar aula em feriados:      
+    $('#calendar').fullCalendar({
+        events: [
+            // Lista de eventos
+        ],
+        eventRender: function(event, element) {
+            element.attr('data-popup', 'feriado'); // Adiciona o atributo data-popup
+            element.addClass('has-popup'); // Adiciona uma classe para estilização
+        }
+    });
+
+
+    //  teste de  justificativa
+
+
+
+    
     // $('#schedule-form').on('submit', function(e) {
     //     e.preventDefault();
 
@@ -167,9 +270,6 @@ $(function () {
 
 
 
-
-
-
     // Form reset listener
     $('#schedule-form').on('reset', function () {
         $(this).find('input:hidden').val('')
@@ -190,7 +290,7 @@ $(function () {
             $('#event-details-modal').modal('hide')
             _form.find('[name="title"]').focus()
         } else {
-            alert("Event is undefined");
+            alert("O evento é indefinido");
         }
     })
 

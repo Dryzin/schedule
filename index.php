@@ -21,10 +21,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> <!-- Script para que os inputs quando selecionados ja preencherem -->
     <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
 
+    <!-- teste de popup de nao pode modificar um feriado para adicionar uma aula -->
+
+
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="fullcalendar/lib/main.min.js"></script>
     <script src='js/pt-br.js'></script>
+
     <style>
         :root {
             --bs-success-rgb: 71, 222, 152 !important;
@@ -82,6 +86,9 @@
             </div>
         </div>
     </nav>
+
+    </table>
+
     <div class="container py-5" id="page-container">
 
         <!-- teste de fazer um popup apareca e depois some e da um reset na pagina -->
@@ -92,6 +99,33 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div> -->
 
+    
+
+
+        <!-- teste de fazer um popup apareca e teste  de impeca de criar aula em feriados-->
+        <div class="modal" id="feriado-modal" tabindex="-1" role="dialog" aria-labelledby="feriado-modal-title">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="feriado-modal-title">Não é possível criar uma aula em um feriado.</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Por favor, selecione outra data para criar a aula.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- teste de fazer um popup apareca e teste  de impeca de criar aula em feriados -->
+
+        <!-- teste de fazer um popup apareca e depois some e da um reset na pagina -->
         <div id="success-modal" class="modal fade" tabindex="-1" aria-labelledby="success-modal-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -165,7 +199,8 @@
                     </div>
                     <div class="card-footer">
                         <div class="text-center">
-                            <button class="btn btn-primary btn-sm rounded-0" type="submit" form="schedule-form"><i class="fa fa-save"></i> Salvar</button>
+                            <button class="btn btn-primary btn-sm rounded-0" type="button" id="save-btn"><i class="fa fa-save"></i> Salvar</button>
+
                             <button class="btn btn-default border btn-sm rounded-0" type="reset" form="schedule-form"><i class="fa fa-reset"></i> Cancelar</button>
                         </div>
                     </div>
