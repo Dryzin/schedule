@@ -58,8 +58,9 @@ id INT AUTO_INCREMENT PRIMARY KEY,
 titulo VARCHAR(32) NOT NULL,
 descricao VARCHAR(32) NOT NULL,
 horario_inicio DATETIME NOT NULL,
-horario_fim DATETIME DEFAULT NULL,
-
+horario_fim DATETIME DEFAULT NULL
+);
+    
 DELIMITER $$
 
 CREATE TRIGGER check_conflito_horario
