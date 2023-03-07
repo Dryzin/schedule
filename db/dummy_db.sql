@@ -53,6 +53,13 @@ FOREIGN KEY (ra_docente) REFERENCES docentes (ra),
 FOREIGN KEY (id_uc) REFERENCES uc (id)
 );
 
+CREATE TABLE feriado (
+id INT AUTO_INCREMENT PRIMARY KEY,
+titulo VARCHAR(32) NOT NULL,
+descricao VARCHAR(32) NOT NULL,
+horario_inicio DATETIME NOT NULL,
+horario_fim DATETIME DEFAULT NULL,
+
 DELIMITER $$
 
 CREATE TRIGGER check_conflito_horario
