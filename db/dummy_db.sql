@@ -13,7 +13,7 @@ SET time_zone = "+00:00";
 
 #criação de uma tabela
 CREATE TABLE usuario (
-id INT PRIMARY KEY,
+ra_user INT PRIMARY KEY,
 nome VARCHAR(255),
 email VARCHAR(50) UNIQUE NOT NULL,
 senha VARCHAR(32) NOT NULL,
@@ -21,15 +21,14 @@ tipo ENUM('docente', 'administrador')
 );
 
 CREATE TABLE docentes (
-ra INT PRIMARY KEY,
-usuario_id INT unique,
-FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+ra INT PRIMARY KEY unique,
+FOREIGN KEY (ra) REFERENCES usuario(ra_user)
 );
 
 CREATE TABLE turma (
 id INT PRIMARY KEY,
 nome VARCHAR(255),
-tipo ENUM('trilhas', 'aprendizagem'),
+tipo ENUM('Trilhas', 'Aprendizagem', 'PSG,', 'Pago', 'MBA'),
 carga_horaria Time
 );
 
@@ -53,6 +52,13 @@ UNIQUE (id_uc, horario_inicio, horario_fim),
 FOREIGN KEY (ra_docente) REFERENCES docentes (ra),
 FOREIGN KEY (id_uc) REFERENCES uc (id)
 );
+
+CREATE TABLE feriado (
+id INT AUTO_INCREMENT PRIMARY KEY,
+titulo VARCHAR(32) NOT NULL,
+descricao VARCHAR(32) NOT NULL,
+horario_inicio DATETIME NOT NULL,
+horario_fim DATETIME DEFAULT NULL,
 
 DELIMITER $$
 
@@ -170,20 +176,40 @@ CREATE TRIGGER check_tipo_usuario_before_insert
 BEFORE INSERT ON docentes
 FOR EACH ROW
 BEGIN
-IF (SELECT tipo FROM usuario WHERE id = NEW.usuario_id) != 'docente' THEN
+IF (SELECT tipo FROM usuario WHERE ra_user = NEW.ra) != 'docente' THEN
 SIGNAL SQLSTATE '45000'
 SET MESSAGE_TEXT = 'Somente usuários do tipo "docente" podem ser inseridos na tabela "docentes".';
 END IF;
 END$$
 
+CREATE TRIGGER tr_calendario_de_aula_insert
+BEFORE INSERT ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    IF NEW.horario_fim < NEW.horario_inicio THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'O horário de fim não pode ser anterior ao horário de início.';
+    END IF;
+END$$
+
+CREATE TRIGGER tr_calendario_de_aula_update
+BEFORE update ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    IF NEW.horario_fim < NEW.horario_inicio THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'O horário de fim não pode ser anterior ao horário de início.';
+    END IF;
+END$$
+
 DELIMITER ;
 
 #INSERTS
-INSERT INTO usuario (id, nome, email, senha, tipo)
+INSERT INTO usuario (ra_user, nome, email, senha, tipo)
 VALUES ('1001','João da Silva','joao@', '123', 'administrador'), ('1002','Matheus','matheus@', '123', 'docente'), ('1003','Cadu','cadu@', '123', 'docente');
 
-INSERT INTO docentes (ra, usuario_id)
-VALUES (1002, 1002), (1003, 1003);
+INSERT INTO docentes (ra)
+VALUES (1002), (1003);
 
 INSERT INTO turma (id, nome, tipo, carga_horaria)
 VALUES
@@ -192,7 +218,6 @@ VALUES
 INSERT INTO uc (nome_uc, num_turma, carga_horaria)
 VALUES ('web', 222, '50:00:00'),('desktop', 333, '40:00:00'), ('mobile', 222, '10:00:00'),('hardware', 333, '32:00:00'), ('Arquivos digitais', 444, '12:00:00') ;
 
-
 INSERT INTO `calendario_de_aula` (`ra_docente`, `id_uc`, `horario_inicio`, `horario_fim`) VALUES
-(1002, 1, '2023-02-19 07:30:00', '2023-02-19 11:30:00'),
-(1003, 2, '2023-02-20 13:30:00', '2023-02-20 17:30:00');
+(1002, 1, '2023-03-19 07:30:00', '2023-03-19 11:30:00'),
+(1003, 2, '2023-03-20 13:30:00', '2023-03-20 17:30:00');
