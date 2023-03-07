@@ -58,9 +58,8 @@ id INT AUTO_INCREMENT PRIMARY KEY,
 titulo VARCHAR(32) NOT NULL,
 descricao VARCHAR(32) NOT NULL,
 horario_inicio DATETIME NOT NULL,
-horario_fim DATETIME DEFAULT NULL
-);
-    
+horario_fim DATETIME DEFAULT NULL,
+
 DELIMITER $$
 
 CREATE TRIGGER check_conflito_horario
@@ -183,6 +182,26 @@ SET MESSAGE_TEXT = 'Somente usuários do tipo "docente" podem ser inseridos na t
 END IF;
 END$$
 
+CREATE TRIGGER tr_calendario_de_aula_insert
+BEFORE INSERT ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    IF NEW.horario_fim < NEW.horario_inicio THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'O horário de fim não pode ser anterior ao horário de início.';
+    END IF;
+END$$
+
+CREATE TRIGGER tr_calendario_de_aula_update
+BEFORE update ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    IF NEW.horario_fim < NEW.horario_inicio THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'O horário de fim não pode ser anterior ao horário de início.';
+    END IF;
+END$$
+
 DELIMITER ;
 
 #INSERTS
@@ -200,5 +219,5 @@ INSERT INTO uc (nome_uc, num_turma, carga_horaria)
 VALUES ('web', 222, '50:00:00'),('desktop', 333, '40:00:00'), ('mobile', 222, '10:00:00'),('hardware', 333, '32:00:00'), ('Arquivos digitais', 444, '12:00:00') ;
 
 INSERT INTO `calendario_de_aula` (`ra_docente`, `id_uc`, `horario_inicio`, `horario_fim`) VALUES
-(1002, 1, '2023-02-19 07:30:00', '2023-02-19 11:30:00'),
-(1003, 2, '2023-02-20 13:30:00', '2023-02-20 17:30:00');
+(1002, 1, '2023-03-19 07:30:00', '2023-03-19 11:30:00'),
+(1003, 2, '2023-03-20 13:30:00', '2023-03-20 17:30:00');
