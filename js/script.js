@@ -39,7 +39,16 @@ $(function () {
             $('#start_datetime').val(startDatetime);
             $('#end_datetime').val(endDatetime);
 
+
+            // Preenche os inputs com as datas selecionadas
+            $('#event-start').val(startDatetime);
+            $('#event-end').val(endDatetime);
+
+            // Exibe o popup
+            $('#popup-container').show();
         },
+
+
         // Fim evento de varias datas e ja preenchar os inputs da data inicio e fim e ja formatado para o banco reconhecer como string
 
         // inicio da função que vai faz que o banco ja conserta para string e va para o arquivo que faz o update para o banco de arrastar 
@@ -89,59 +98,6 @@ $(function () {
 
     calendar.render();
 
-
-    //teste de fazer um popup apareca e depois some e da um reset na pagina
-
-    $('#schedule-form').on('submit', function (e) {
-        e.preventDefault();
-
-        // faz o envio do formulário via AJAX
-        $.ajax({
-            url: './save_schedule.php',
-            method: 'POST',
-            data: $(this).serialize(),
-            success: function () {
-                // exibe a mensagem de sucesso na caixa de diálogo
-                $('#success-modal').modal('show');
-
-                $('#schedule-form').show().fadeOut(3000, function () {
-                    // recarrega a página após a mensagem desaparecer
-                    location.reload();
-                });
-                // limpa o formulário
-                $('#schedule-form').trigger('reset');
-            }
-        });
-    });
-
-
-
-
-    //teste de fazer um popup apareca e depois some e da um reset na pagina de deletar
-    $('#delete').click(function () {
-        var id = $(this).attr('data-id');
-        if (!!scheds[id]) {
-            $('#event-details-modal').modal('hide');
-            $('#delete-modal').modal('show');
-            $('#confirm-delete').click(function () {
-                location.href = "./delete_schedule.php?id=" + id;
-            });
-            $('#delete-modal').on('hidden.bs.modal', function (e) {
-                $('#event-details-modal').modal('show');
-            });
-            $('#delete-modal').on('shown.bs.modal', function (e) { // ele faz que quando cancelar ele volta para a tela de editar
-                $('#confirm-delete').focus();
-            });
-            $('#delete-modal .close').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
-                $('#delete-modal').modal('hide');
-            });
-            $('#delete-modal .btn-secondary').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
-                $('#delete-modal').modal('hide');
-            });
-        } else {
-            alert("Evento não definido");
-        }
-    });
 
 
     // teste de api de feriados
@@ -193,7 +149,7 @@ $(function () {
             $('#feriado-modal .close, #feriado-modal .modal-footer button').click(function () {
                 $('#feriado-modal').modal('hide');
             });
-            
+
 
         });
 
@@ -229,23 +185,106 @@ $(function () {
     });
 
 
-    // teste  de impeca de criar aula em feriados:      
-    $('#calendar').fullCalendar({
-        events: [
-            // Lista de eventos
-        ],
-        eventRender: function(event, element) {
-            element.attr('data-popup', 'feriado'); // Adiciona o atributo data-popup
-            element.addClass('has-popup'); // Adiciona uma classe para estilização
+    //teste de fazer um popup apareca e depois some e da um reset na pagina de deletar
+    $('#delete').click(function () {
+        var id = $(this).attr('data-id');
+        if (!!scheds[id]) {
+            $('#event-details-modal').modal('hide');
+            $('#delete-modal').modal('show');
+            $('#confirm-delete').click(function () {
+                location.href = "./delete_schedule.php?id=" + id;
+            });
+            $('#delete-modal').on('hidden.bs.modal', function (e) {
+                $('#event-details-modal').modal('show');
+            });
+            $('#delete-modal').on('shown.bs.modal', function (e) { // ele faz que quando cancelar ele volta para a tela de editar
+                $('#confirm-delete').focus();
+            });
+            $('#delete-modal .close').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
+                $('#delete-modal').modal('hide');
+            });
+            $('#delete-modal .btn-secondary').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
+                $('#delete-modal').modal('hide');
+            });
+        } else {
+            alert("Evento não definido");
         }
     });
 
 
+
     //  teste de  justificativa
 
+// Obtém o formulário e adiciona o evento "submit"
+const eventForm = document.getElementById("event-form");
+eventForm.addEventListener("submit", (event) => {
+  event.preventDefault(); // Impede que a página seja recarregada
+
+  // Obtém os dados do formulário
+  const formData = new FormData(event.target);
+
+  // Verifica se os campos obrigatórios foram preenchidos
+  if (!eventForm.checkValidity()) {
+    // Exibe mensagem de erro
+    console.error("Erro ao salvar evento! Campos obrigatórios não preenchidos.");
+    return;
+  }
+
+  // Realiza a requisição AJAX utilizando o método POST
+  fetch("./save_feriado.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      // Verifica se a resposta da requisição foi bem sucedida
+      if (response.ok) {
+        // Exibe mensagem de sucesso
+        console.log("Evento salvo com sucesso!");
+        // Reseta o formulário
+        eventForm.reset();
+        // Fecha o popup
+        closePopup();
+        // Reseta a página
+        window.location.reload();
+      } else {
+        // Exibe mensagem de erro
+        console.error("Erro ao salvar evento!");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+});
+
+// Obtém o elemento input da data de início
+const startInput = document.getElementById("event-start");
+startInput.addEventListener("change", () => {
+  // Obtém o valor da data selecionada
+  const startDate = startInput.value;
+  // Preenche os inputs de data com o valor da data selecionada
+  document.getElementById("event-start").value = startDate;
+  document.getElementById("event-end").value = startDate;
+});
+
+// Mostra o popup ao clicar no botão "Adicionar Evento"
+$("#add-event").click(function () {
+  // exibe o conteúdo do pop-up
+  $("#popup-container").show();
+});
+// aqui o usuario não queira fazer mais feriados e cancela e ja sai da pagina
+$("#cancel-event").click(function () {
+  // esconde o conteúdo do pop-up
+  $("#popup-container").hide();
+});
+// aqui quando o usuario clickar ele envia o formulario e ja da o reset
+$("#save-event").click(function () {
+  // Dispara o evento "submit" do formulário
+  eventForm.dispatchEvent(new Event("submit"));
+});
+
+// fazer a correção de salvar e não resetar a pagina 
 
 
-    
     // $('#schedule-form').on('submit', function(e) {
     //     e.preventDefault();
 
@@ -267,6 +306,8 @@ $(function () {
     //       }
     //     });
     //   });
+
+    // teste de não aparecer o poup de agenda de eventos para colocar um feriado somente para o senac
 
 
 

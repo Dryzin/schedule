@@ -24,6 +24,7 @@
     <!-- teste de popup de nao pode modificar um feriado para adicionar uma aula -->
 
 
+
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="fullcalendar/lib/main.min.js"></script>
@@ -91,6 +92,7 @@
 
     <div class="container py-5" id="page-container">
 
+
         <!-- teste de fazer um popup apareca e depois some e da um reset na pagina -->
 
 
@@ -99,7 +101,83 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div> -->
 
+        <!-- teste de poup de agendar evento ou feriado do proprio senac -->
+
+
+
+        <div id="popup-container">
+    <div id="popup-content">
+        <h2 id="popup-title">Agendar Evento</h2>
+        <form id="event-form">
+            <label for="event-title">Título:</label>
+            <input type="text" id="event-title" name="titulo" required><br>
+
+            <label for="event-description">Descrição:</label>
+            <input type="text" id="event-description" name="descricao" required><br>
+
+            <label for="event-start">Horário de início:</label>
+            <input type="datetime-local" id="event-start" name="horario_inicio" required><br>
+
+            <label for="event-end">Horário de término:</label>
+            <input type="datetime-local" id="event-end" name="horario_fim" required><br>
+
+            <button type="submit" id="save-event">Salvar</button>
+            <button type="button" id="cancel-event">Cancelar</button>
+        </form>
+    </div>
+</div>
+
     
+
+
+        <style>
+            #popup-container {
+                display: none;
+                position: fixed;
+                z-index: 9999;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            #popup-content {
+                background-color: #fefefe;
+                margin: 10% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 20%;
+            }
+
+
+
+            #popup-title {
+                text-align: center;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            label {
+                margin-top: 10px;
+            }
+
+            input[type="text"],
+            input[type="datetime-local"] {
+                margin-bottom: 20px;
+            }
+
+            #save-event,
+            #cancel-event {
+                margin-top: 20px;
+                width: 100%;
+            }
+        </style>
+        <!-- teste de poup de agendar evento ou feriado do proprio senac -->
 
 
         <!-- teste de fazer um popup apareca e teste  de impeca de criar aula em feriados-->
@@ -220,9 +298,9 @@
                 <div class="modal-body rounded-0">
                     <div class="container-fluid">
                         <dl>
-                            <dt class="text-muted">Titulo</dt>
+                            <dt class="text-muted">RA</dt>
                             <dd id="title" class="fw-bold fs-4"></dd>
-                            <dt class="text-muted">Descrição</dt>
+                            <dt class="text-muted"> ID (Unidade) </dt>
                             <dd id="description" class=""></dd>
                             <dt class="text-muted">Começo</dt>
                             <dd id="start" class=""></dd>
@@ -264,5 +342,6 @@
     var scheds = $.parseJSON('<?= json_encode($sched_res) ?>')
 </script>
 <script src="./js/script.js"></script>
+<script src="js/poup.js"></script>
 
 </html>
