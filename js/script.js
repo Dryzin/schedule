@@ -29,24 +29,96 @@ $(function () {
         themeSystem: 'bootstrap',
         //Random default events
         events: events,
-
-
         // inicio evento de varias datas e ja preenchar os inputs da data inicio e fim e ja formatado para o banco reconhecer como string
         select: async (arg) => {
-            // console.log(arg);
+            // Lista de feriados
+
+            // Lista de feriados
+            var holidays = [];
+
+            // Loop para percorrer os anos desejados
+            for (var year = 2023; year <= 2030; year++) {
+                // Ano novo
+                holidays.push(moment(year + '-01-01').format('YYYY-MM-DD'));
+
+                // Carnaval
+                holidays.push(moment(year + '-02-20').format('YYYY-MM-DD'));
+                holidays.push(moment(year + '-02-21').format('YYYY-MM-DD'));
+                holidays.push(moment(year + '-02-22').format('YYYY-MM-DD'));
+                // Tiradentes
+                holidays.push(moment(year + '-04-21').format('YYYY-MM-DD'));
+
+                // Dia do Trabalho
+                holidays.push(moment(year + '-05-01').format('YYYY-MM-DD'));
+
+                // Independência do Brasil
+                holidays.push(moment(year + '-09-07').format('YYYY-MM-DD'));
+
+                // Nossa Senhora Aparecida
+                holidays.push(moment(year + '-10-12').format('YYYY-MM-DD'));
+
+                // Finados
+                holidays.push(moment(year + '-11-02').format('YYYY-MM-DD'));
+
+                // Proclamação da República
+                holidays.push(moment(year + '-11-15').format('YYYY-MM-DD'));
+
+                // Natal
+                holidays.push(moment(year + '-12-25').format('YYYY-MM-DD'));
+            }
+
+            // Exemplo de como utilizar a lista de feriados
+            console.log(holidays);
+
+            // Verifica se a data selecionada é um feriado
+            if (holidays.includes(moment(arg.start).format('YYYY-MM-DD'))) {
+                // Exibe o modal de aviso
+                $('#feriado-modal').modal('show');
+                $('#feriado-modal .close').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
+                    $('#feriado-modal').modal('hide');
+                });
+                $('#feriado-modal .close, #feriado-modal .modal-footer button').click(function () {
+                    $('#feriado-modal').modal('hide');
+                });
+
+                return;
+
+            }
+            
+            // Verifica se a data de fim selecionada está no futuro ou não
+            if (moment(arg.end).isBefore(moment())) {
+                alert('A data de término selecionada já passou!');
+                return;
+            }
+            // Verifica se a data selecionada é um feriado
+            if (holidays.includes(moment(arg.end).format('YYYY-MM-DD'))) {
+                // Exibe o modal de aviso
+                $('#feriado-modal').modal('show');
+                $('#feriado-modal .close').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
+                    $('#feriado-modal').modal('hide');
+                });
+                $('#feriado-modal .close, #feriado-modal .modal-footer button').click(function () {
+                    $('#feriado-modal').modal('hide');
+                });
+
+                // Esconde o formulário
+                $('#popup-container').hide();
+
+                return;
+            }
+
+
+            // Se a data selecionada não é um feriado, continue com o evento normalmente
             var startDatetime = moment(arg.start).format('YYYY-MM-DDTHH:mm');
-            var endDatetime = moment(arg.end).subtract(1, 'day').format('YYYY-MM-DDTHH:mm');  //Aqui foi alterado para que ele diminua um dia, pois por padrão ele seleciona mais um dia adicional, assim a função (.subtract(1, 'day') ) ela permite que deminua um dia para que fique certo quando selecionar as datas.
+            var endDatetime = moment(arg.end).subtract(1, 'day').format('YYYY-MM-DDTHH:mm');
             $('#start_datetime').val(startDatetime);
             $('#end_datetime').val(endDatetime);
-
-
-            // Preenche os inputs com as datas selecionadas
             $('#event-start').val(startDatetime);
             $('#event-end').val(endDatetime);
-
-            // Exibe o popup
             $('#popup-container').show();
         },
+
+
 
 
         // Fim evento de varias datas e ja preenchar os inputs da data inicio e fim e ja formatado para o banco reconhecer como string
@@ -127,6 +199,9 @@ $(function () {
         });
     }
     // teste de api de feriados
+
+
+
 
     // teste  de impeca de criar aula em feriados:
     $(document).ready(function () {
@@ -215,99 +290,70 @@ $(function () {
 
     //  teste de  justificativa
 
-// Obtém o formulário e adiciona o evento "submit"
-const eventForm = document.getElementById("event-form");
-eventForm.addEventListener("submit", (event) => {
-  event.preventDefault(); // Impede que a página seja recarregada
+    // Obtém o formulário e adiciona o evento "submit"
 
-  // Obtém os dados do formulário
-  const formData = new FormData(event.target);
+    const eventForm = document.getElementById("event-form");
+    eventForm.addEventListener("submit", (event) => {
+        event.preventDefault(); // Impede que a página seja recarregada
 
-  // Verifica se os campos obrigatórios foram preenchidos
-  if (!eventForm.checkValidity()) {
-    // Exibe mensagem de erro
-    console.error("Erro ao salvar evento! Campos obrigatórios não preenchidos.");
-    return;
-  }
+        // Obtém os dados do formulário
+        const formData = new FormData(event.target);
 
-  // Realiza a requisição AJAX utilizando o método POST
-  fetch("./save_feriado.php", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => {
-      // Verifica se a resposta da requisição foi bem sucedida
-      if (response.ok) {
-        // Exibe mensagem de sucesso
-        console.log("Evento salvo com sucesso!");
+        // Verifica se os campos obrigatórios foram preenchidos
+        if (!eventForm.checkValidity()) {
+            // Exibe mensagem de erro
+            console.error("Erro ao salvar evento! Campos obrigatórios não preenchidos.");
+            return;
+        }
+
+        // Realiza a requisição AJAX utilizando o método POST
+        fetch("./save_feriado.php", {
+            method: "POST",
+            body: formData,
+
+        })
+
+
+        //   reseta a página após 3 segundos
+        setTimeout(function () {
+            location.reload();
+        },);
+
+
+    });
+
+
+
+    // Obtém o elemento input da data de início
+    const startInput = document.getElementById("event-start");
+    startInput.addEventListener("change", () => {
+        // Obtém o valor da data selecionada
+        const startDate = startInput.value;
+        // Preenche os inputs de data com o valor da data selecionada
+        document.getElementById("event-start").value = startDate;
+        document.getElementById("event-end").value = startDate;
+    });
+
+    // Mostra o popup ao clicar no botão "Adicionar Evento"
+    $("#add-event").click(function () {
+        // exibe o conteúdo do pop-up
+        $("#popup-container").show();
+
+    });
+    // aqui o usuario não queira fazer mais feriados e cancela e ja sai da pagina
+    $("#cancel-event").click(function () {
+        // esconde o conteúdo do pop-up
+        $("#popup-container").hide();
+
         // Reseta o formulário
         eventForm.reset();
-        // Fecha o popup
-        closePopup();
-        // Reseta a página
-        window.location.reload();
-      } else {
-        // Exibe mensagem de erro
-        console.error("Erro ao salvar evento!");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
+
+        $("save-event").click(function () {
+            // exibe o conteúdo do pop-up
+
+            $("#popup-container").show();
+        });
     });
-});
-
-// Obtém o elemento input da data de início
-const startInput = document.getElementById("event-start");
-startInput.addEventListener("change", () => {
-  // Obtém o valor da data selecionada
-  const startDate = startInput.value;
-  // Preenche os inputs de data com o valor da data selecionada
-  document.getElementById("event-start").value = startDate;
-  document.getElementById("event-end").value = startDate;
-});
-
-// Mostra o popup ao clicar no botão "Adicionar Evento"
-$("#add-event").click(function () {
-  // exibe o conteúdo do pop-up
-  $("#popup-container").show();
-});
-// aqui o usuario não queira fazer mais feriados e cancela e ja sai da pagina
-$("#cancel-event").click(function () {
-  // esconde o conteúdo do pop-up
-  $("#popup-container").hide();
-});
-// aqui quando o usuario clickar ele envia o formulario e ja da o reset
-$("#save-event").click(function () {
-  // Dispara o evento "submit" do formulário
-  eventForm.dispatchEvent(new Event("submit"));
-});
-
-// fazer a correção de salvar e não resetar a pagina 
-
-
-    // $('#schedule-form').on('submit', function(e) {
-    //     e.preventDefault();
-
-
-    //     // faz o envio do formulário via AJAX
-    //     $.ajax({
-    //       url: './save_schedule.php',
-    //       method: 'POST',
-    //       data: $(this).serialize(),
-    //       success: function() {
-    //         // exibe a mensagem de sucesso e faz ela desaparecer após 5 segundos
-    //         $('#success-alert').show().fadeOut(5000, function() {
-    //           // recarrega a página após a mensagem desaparecer
-    //           location.reload();
-    //         });
-
-    //         // limpa o formulário
-    //         $('#schedule-form').trigger('reset');
-    //       }
-    //     });
-    //   });
-
-    // teste de não aparecer o poup de agenda de eventos para colocar um feriado somente para o senac
 
 
 
@@ -335,19 +381,6 @@ $("#save-event").click(function () {
         }
     })
 
-    // Delete Button / Deleting an Event
-    // $('#delete').click(function () {
-    //     var id = $(this).attr('data-id')
-    //     if (!!scheds[id]) {
-    //         var _conf = confirm("Tem certeza de que deseja excluir este evento agendado?");
-    //         if (_conf === true) {
-    //             location.href = "./delete_schedule.php?id=" + id;
-    //         }
-    //     } else {
-    //         alert("Event is undefined");
-    //     }
-    // })
-
 
     //Arraste e redimensionamento de eventos
     // função que faz a converção de mês, data e minutos para string, para o banco reconhcer 
@@ -374,5 +407,7 @@ $("#save-event").click(function () {
         });
         let ress = await reqs.json();
     }
+
+
 
 })

@@ -103,31 +103,83 @@
 
         <!-- teste de poup de agendar evento ou feriado do proprio senac -->
 
-
-
         <div id="popup-container">
-    <div id="popup-content">
-        <h2 id="popup-title">Agendar Evento</h2>
-        <form id="event-form">
-            <label for="event-title">Título:</label>
-            <input type="text" id="event-title" name="titulo" required><br>
+            <div id="popup-content">
+                <h2 id="popup-title">Agendar Evento</h2>
+                <form id="event-form">
+                    <label for="event-title">Título:</label>
+                    <input type="text" id="event-title" name="titulo" required><br>
 
-            <label for="event-description">Descrição:</label>
-            <input type="text" id="event-description" name="descricao" required><br>
+                    <label for="event-description">Descrição:</label>
+                    <input type="text" id="event-description" name="descricao" required><br>
 
-            <label for="event-start">Horário de início:</label>
-            <input type="datetime-local" id="event-start" name="horario_inicio" required><br>
+                    <label for="event-start">Horário de início:</label>
+                    <input type="datetime-local" id="event-start" name="horario_inicio" onchange="verificarFeriado()" required><br>
 
-            <label for="event-end">Horário de término:</label>
-            <input type="datetime-local" id="event-end" name="horario_fim" required><br>
+                    <label for="event-end">Horário de término:</label>
+                    <input type="datetime-local" id="event-end" name="horario_fim" onchange="verificarFeriado()" required><br>
 
-            <button type="submit" id="save-event">Salvar</button>
-            <button type="button" id="cancel-event">Cancelar</button>
-        </form>
-    </div>
-</div>
 
-    
+                    <button type="submit" id="save-event">Salvar</button>
+                    <button type="button" id="cancel-event">Cancelar</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function verificarFeriado() {
+                // Lista de feriados
+                var holidays = [];
+
+                // Loop para percorrer os anos desejados
+                for (var year = 2023; year <= 2030; year++) {
+                    // Ano novo
+                    holidays.push(moment(year + '-01-01').format('YYYY-MM-DD'));
+
+                    // Carnaval
+                    holidays.push(moment(year + '-02-20').format('YYYY-MM-DD'));
+                    holidays.push(moment(year + '-02-21').format('YYYY-MM-DD'));
+                    holidays.push(moment(year + '-02-22').format('YYYY-MM-DD'));
+                    // Tiradentes
+                    holidays.push(moment(year + '-04-21').format('YYYY-MM-DD'));
+
+                    // Dia do Trabalho
+                    holidays.push(moment(year + '-05-01').format('YYYY-MM-DD'));
+
+                    // Independência do Brasil
+                    holidays.push(moment(year + '-09-07').format('YYYY-MM-DD'));
+
+                    // Nossa Senhora Aparecida
+                    holidays.push(moment(year + '-10-12').format('YYYY-MM-DD'));
+
+                    // Finados
+                    holidays.push(moment(year + '-11-02').format('YYYY-MM-DD'));
+
+                    // Proclamação da República
+                    holidays.push(moment(year + '-11-15').format('YYYY-MM-DD'));
+
+                    // Natal
+                    holidays.push(moment(year + '-12-25').format('YYYY-MM-DD'));
+                }
+
+                // Verifica se a data selecionada é um feriado
+                if (holidays.includes(moment($('#event-start').val()).format('YYYY-MM-DD'))) {
+                    // Exibe mensagem de erro
+                    alert('Não é possível criar uma aula em um feriado.');
+                    $('#event-start').val('');
+                    return;
+                }
+                if (holidays.includes(moment($('#event-end').val()).format('YYYY-MM-DD'))) {
+                    // Exibe mensagem de erro
+                    alert('Não é possível criar uma aula em um feriado.');
+                    $('#event-end').val('');
+                    return;
+                }
+
+            }
+            
+        </script>
+
 
 
         <style>
@@ -266,11 +318,11 @@
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="start_datetime" class="control-label">Começo</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="start_datetime" id="start_datetime" required>
+                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="start_datetime" id="start_datetime"  onchange="verificarFeriado()"required>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Fim</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
+                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" onchange="verificarFeriado()" required>
                                 </div>
                             </form>
                         </div>
@@ -324,19 +376,31 @@
     <!-- Event Details Modal -->
 
     <?php
-    locale:
-    'pt-br';
-    $schedules = $conn->query("SELECT * FROM `calendario_de_aula`");
+    // Lógica PHP para obter os dados de várias tabelas
+    $locale = 'pt-br';
+    $schedules1 = $conn->query("SELECT * FROM `calendario_de_aula`");
+    $schedules2 = $conn->query("SELECT * FROM `feriado`"); // Adicione quantas tabelas desejar
     $sched_res = [];
-    foreach ($schedules->fetch_all(MYSQLI_ASSOC) as $row) {
+    while ($row = $schedules1->fetch_assoc()) {
         $row['sdate'] = date("F d, Y h:i A", strtotime($row['horario_inicio']));
         $row['edate'] = date("F d, Y h:i A", strtotime($row['horario_fim']));
-        $sched_res[$row['id']] = $row;
+        $row['tipo'] = 'Aula'; // Indica que este evento é uma aula
+        $sched_res[] = $row;
     }
-    ?>
-    <?php
+    while ($row = $schedules2->fetch_assoc()) {
+        $row['sdate'] = date("F d, Y h:i A", strtotime($row['horario_inicio']));
+        $row['edate'] = date("F d, Y h:i A", strtotime($row['horario_fim']));
+        $row['title'] = $row['titulo']; // Título do evento
+        $row['description'] = $row['descricao']; // Descrição do evento
+        $row['tipo'] = 'feriado'; // Indica que este evento é de outro tipo
+        $sched_res[] = $row;
+    }
+    usort($sched_res, function ($a, $b) {
+        return strtotime($a['sdate']) - strtotime($b['sdate']);
+    }); // Ordena os eventos por data/hora de início
     if (isset($conn)) $conn->close();
     ?>
+
 </body>
 <script>
     var scheds = $.parseJSON('<?= json_encode($sched_res) ?>')

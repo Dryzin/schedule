@@ -16,5 +16,6 @@ if(empty($id)){
 $conn->query($sql); 
 
 $conn->close();
-
+header("Location: http://localhost/schedule/"); // substitua a barra com a URL da sua página inicial
+exit();
 ?>
