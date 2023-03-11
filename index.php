@@ -1,4 +1,5 @@
 <?php require_once('db-connect.php') ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <!-- Teste commit brash -->
@@ -21,10 +22,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> <!-- Script para que os inputs quando selecionados ja preencherem -->
     <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
 
-    <!-- teste de popup de nao pode modificar um feriado para adicionar uma aula -->
-
-
-
+    <!-- teste de popup de nao pode modificar um feriadoz para adicionar uma aula -->
     <script src="js/jquery-3.6.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="fullcalendar/lib/main.min.js"></script>
@@ -99,32 +97,33 @@
         <!-- <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
             Agendamento salvo com sucesso!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div> -->
-
-        <!-- teste de poup de agendar evento ou feriado do proprio senac -->
-
-        <div id="popup-container">
-            <div id="popup-content">
-                <h2 id="popup-title">Agendar Evento</h2>
-                <form id="event-form">
-                    <label for="event-title">Título:</label>
-                    <input type="text" id="event-title" name="titulo" required><br>
-
-                    <label for="event-description">Descrição:</label>
-                    <input type="text" id="event-description" name="descricao" required><br>
-
-                    <label for="event-start">Horário de início:</label>
-                    <input type="datetime-local" id="event-start" name="horario_inicio" onchange="verificarFeriado()" required><br>
-
-                    <label for="event-end">Horário de término:</label>
-                    <input type="datetime-local" id="event-end" name="horario_fim" onchange="verificarFeriado()" required><br>
-
-
-                    <button type="submit" id="save-event">Salvar</button>
-                    <button type="button" id="cancel-event">Cancelar</button>
-                </form>
-            </div>
         </div>
+
+         teste de poup de agendar evento ou feriado do proprio senac -->
+   
+
+            <!-- <div id="popup-container">
+                <div id="popup-content">
+                    <h2 id="popup-title">Agendar Evento</h2>
+                    <form id="event-form">
+                        <label for="event-title">Título:</label>
+                        <input type="text" id="event-title" name="titulo" required><br>
+
+                        <label for="event-description">Descrição:</label>
+                        <input type="text" id="event-description" name="descricao" required><br>
+
+                        <label for="event-start">Horário de início:</label>
+                        <input type="datetime-local" id="event-start" name="horario_inicio" onchange="verificarFeriado()" required><br>
+
+                        <label for="event-end">Horário de término:</label>
+                        <input type="datetime-local" id="event-end" name="horario_fim" onchange="verificarFeriado()" required><br>
+
+
+                        <button type="submit" id="save-event">Salvar</button>
+                        <button type="button" id="cancel-event">Cancelar</button>
+                    </form>
+                </div>
+            </div>
 
         <script>
             function verificarFeriado() {
@@ -228,7 +227,7 @@
                 margin-top: 20px;
                 width: 100%;
             }
-        </style>
+        </style> -->
         <!-- teste de poup de agendar evento ou feriado do proprio senac -->
 
 
@@ -292,7 +291,32 @@
             </div>
         </div>
 
+
         <!-- teste de fazer um popup de delete -->
+        <div class="modal fade" id="delete-modal-feriado" tabindex="-1" role="dialog" aria-labelledby="event-details-modal-feriado" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered d-flex justify-content-center" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delete-modal-label">Deletar evento agendado</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza de que deseja excluir este evento agendado?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirm-delete-feriado">Excluir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- teste de fazer um popup de delete -->
+
 
 
         <div class="row">
@@ -309,8 +333,8 @@
                             <form action="save_schedule.php" method="post" id="schedule-form">
                                 <input type="hidden" name="id" value="">
                                 <div class="form-group mb-2">
-                                    <label for="title" class="control-label">RA</label>
-                                    <input type="text" class="form-control form-control-sm rounded-0" name="title" id="title" required>
+                                        <label for="title" class="control-label">RA</label>
+                                        <input type="text" class="form-control form-control-sm rounded-0" name="title" id="title" required>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="description" class="control-label">ID (Unidade)</label>
@@ -318,19 +342,18 @@
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="start_datetime" class="control-label">Começo</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="start_datetime" id="start_datetime"  onchange="verificarFeriado()"required>
+                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="start_datetime" id="start_datetime" required>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Fim</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" onchange="verificarFeriado()" required>
+                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="card-footer">
                         <div class="text-center">
-                            <button class="btn btn-primary btn-sm rounded-0" type="button" id="save-btn"><i class="fa fa-save"></i> Salvar</button>
-
+                            <button class="btn btn-primary btn-sm rounded-0" type="submit" form="schedule-form"><i class="fa fa-save"></i> Salvar</button>
                             <button class="btn btn-default border btn-sm rounded-0" type="reset" form="schedule-form"><i class="fa fa-reset"></i> Cancelar</button>
                         </div>
                     </div>
@@ -365,6 +388,7 @@
                     <div class="text-end">
                         <button type="button" class="btn btn-primary btn-sm rounded-0" id="edit" data-id="">Editar</button>
                         <button type="button" class="btn btn-danger btn-sm rounded-0" id="delete" data-id="">Deletar</button>
+
                         <button type="button" class="btn btn-secondary btn-sm rounded-0" data-bs-dismiss="modal">Fechar</button>
                     </div>
                 </div>
@@ -373,39 +397,66 @@
     </div>
 
 
+      <!-- Aqui ele exibe os detalhes dos feriados -->
+      <div class="modal fade" tabindex="-1" data-bs-backdrop="static" id="event-details-modal-feriado">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-0">
+            <div class="modal-header rounded-0">
+                <h5 class="modal-title">Detalhes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body rounded-0">
+                <div class="container-fluid">
+                    <dl>
+                        <dt class="text-muted">Título</dt>
+                        <dd id="event-title" class="fw-bold fs-4"></dd>
+                        <dt class="text-muted">Descrição</dt>
+                        <dd id="event-description" class=""></dd>
+                        <dt class="text-muted">Começo</dt>
+                        <dd id="event-start" class=""></dd>
+                        <dt class="text-muted">Fim</dt>
+                        <dd id="event-end" class=""></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer rounded-0">
+                <div class="text-end">
+                    <button type="button" class="btn btn-primary btn-sm rounded-0" id="edit-evento" data-id="">Editar</button>
+                    <button type="button" class="btn btn-danger btn-sm rounded-0" id="delete-button" data-id="">Deletar</button>
+                    <button type="button" class="btn btn-secondary btn-sm rounded-0" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <!-- Event Details Modal -->
 
     <?php
-    // Lógica PHP para obter os dados de várias tabelas
-    $locale = 'pt-br';
-    $schedules1 = $conn->query("SELECT * FROM `calendario_de_aula`");
-    $schedules2 = $conn->query("SELECT * FROM `feriado`"); // Adicione quantas tabelas desejar
-    $sched_res = [];
-    while ($row = $schedules1->fetch_assoc()) {
-        $row['sdate'] = date("F d, Y h:i A", strtotime($row['horario_inicio']));
-        $row['edate'] = date("F d, Y h:i A", strtotime($row['horario_fim']));
-        $row['tipo'] = 'Aula'; // Indica que este evento é uma aula
-        $sched_res[] = $row;
-    }
-    while ($row = $schedules2->fetch_assoc()) {
-        $row['sdate'] = date("F d, Y h:i A", strtotime($row['horario_inicio']));
-        $row['edate'] = date("F d, Y h:i A", strtotime($row['horario_fim']));
-        $row['title'] = $row['titulo']; // Título do evento
-        $row['description'] = $row['descricao']; // Descrição do evento
-        $row['tipo'] = 'feriado'; // Indica que este evento é de outro tipo
-        $sched_res[] = $row;
-    }
-    usort($sched_res, function ($a, $b) {
-        return strtotime($a['sdate']) - strtotime($b['sdate']);
-    }); // Ordena os eventos por data/hora de início
-    if (isset($conn)) $conn->close();
-    ?>
+
+locale:
+'pt-br';
+
+$schedules = $conn->query("SELECT id, ra_docente, id_uc, horario_inicio, horario_fim, 'aula' as tipo FROM `calendario_de_aula`
+                          UNION ALL
+                          SELECT id, titulo, descricao, horario_inicio, horario_fim, 'feriado' as tipo FROM `feriado`");
+
+$sched_res = [];
+foreach ($schedules->fetch_all(MYSQLI_ASSOC) as $row) {  
+    $row['sdate'] = date("F d, Y h:i A", strtotime($row['horario_inicio']));
+    $row['edate'] = date("F d, Y h:i A", strtotime($row['horario_fim']));
+    $sched_res[$row['id']] = $row;
+}
+
+if (isset($conn)) $conn->close();
+?>
 
 </body>
 <script>
-    var scheds = $.parseJSON('<?= json_encode($sched_res) ?>')
+var scheds = $.parseJSON('<?= json_encode($sched_res) ?>');
 </script>
+
 <script src="./js/script.js"></script>
-<script src="js/poup.js"></script>
 
 </html>

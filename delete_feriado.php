@@ -1,4 +1,4 @@
-    <?php 
+<?php 
 require_once('db-connect.php');
 if(!isset($_GET['id'])){
     echo "<script> alert('ID de agendamento indefinido.'); location.replace('./') </script>";
@@ -6,7 +6,7 @@ if(!isset($_GET['id'])){
     exit;
 }
 
-$delete = $conn->query("DELETE FROM `calendario_de_aula` where id = '{$_GET['id']}'");
+$delete1 = $conn->query("DELETE FROM `feriado` where id = '{$_GET['id']}'");
 // if($delete){
 //     echo "<script> alert('O evento foi excluído com sucesso.'); location.replace('./') </script>";
 // }else{

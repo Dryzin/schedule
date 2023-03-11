@@ -59,7 +59,7 @@ function getFeriadosTodosAnos($anoInicial, $anoFinal) {
 
 // Aqui podemos definir o inicio que definir a data de inicio e fim ( quanto mais a data de inicio e fim mais tempo para carregar a pagina )
 $anoInicial = isset($_GET['ano_inicial']) ? $_GET['ano_inicial'] : 2000;
-$anoFinal = isset($_GET['ano_final']) ? $_GET['ano_final'] : 2050;
+$anoFinal = isset($_GET['ano_final']) ? $_GET['ano_final'] : 2030;
 $resultado = getFeriadosTodosAnos($anoInicial, $anoFinal);
 
 echo json_encode($resultado);

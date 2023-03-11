@@ -11,7 +11,7 @@ $allday = isset($allday);
 if(empty($id)){
   $sql = "INSERT INTO `feriado` (`titulo`,`descricao`,`horario_inicio`,`horario_fim`) VALUES ('$titulo','$descricao','$horario_inicio','$horario_fim')";
 }else{
-  $sql = "UPDATE `feriado` set `titulo` = '{$titulo}', `descricao= '{$descricao}',horario_inicio= '{$horario_inicio}',horario_fim= '{$horario_fim}' whereid` = '{$id}'";
+  $sql = "UPDATE `feriado` set `titulo` = '{$titulo}', `descricao` = '{$descricao}', `horario_inicio` = '{$horario_inicio}', `horario_fim` = '{$horario_fim}' where `id` = '{$id}'";
 }
 $conn->query($sql); 
 
