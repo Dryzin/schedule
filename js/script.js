@@ -15,9 +15,9 @@ $(function () {
 
     calendar = new Calendar(document.getElementById('calendar'), {
         headerToolbar: {
-            left: 'prev,next today',
-            right: 'dayGridMonth,dayGridWeek,list',
-            center: 'title',
+            left: 'title',
+            right: 'prev,next,today',
+            center: 'dayGridMonth,dayGridWeek,list',
             locale: 'pt-br'
         },
         locale: 'pt-br',
@@ -27,6 +27,40 @@ $(function () {
         themeSystem: 'bootstrap',
         //Random default events
         events: events,
+
+        // traducao completa dos dias ( feito por Rafael )
+        dayHeaderContent: function(arg) {
+            var dayOfWeek = arg.date.getUTCDay();
+            var customDayName;
+            
+            switch (dayOfWeek) {
+                case 0:
+                    customDayName = 'Domingo';
+                    break;
+                case 1:
+                    customDayName = 'Segunda';
+                    break;
+                case 2:
+                    customDayName = 'Terça';
+                    break;
+                case 3:
+                    customDayName = 'Quarta';
+                    break;
+                case 4:
+                    customDayName = 'Quinta';
+                    break;
+                case 5:
+                    customDayName = 'Sexta';
+                    break;
+                case 6:
+                    customDayName = 'Sábado';
+                    break;
+                default:
+                    customDayName = arg.text;
+            }
+            
+            return customDayName;
+        },  
 
         // inicio evento de varias datas e ja preenchar os inputs da data inicio e fim e ja formatado para o banco reconhecer como string
         select: async (arg) => {
@@ -207,7 +241,7 @@ $(function () {
     // Aqui ele acha a api de feriados
     function getFeriados() {
         return $.ajax({
-            url: 'http://localhost/schedule/api_feriado.php',
+            url: 'http://localhost/schedule/api_feriado/api_feriado.php',
             dataType: 'json',
             success: function (response) {
                 return response;
@@ -275,6 +309,29 @@ $(function () {
         }
     });
 
+    //teste de fazer um popup apareca e depois some e da um reset na pagina
+
+    $('#schedule-form').on('submit', function (e) {
+        e.preventDefault();
+
+        // faz o envio do formulário via AJAX
+        $.ajax({
+            url: '../../funcao_salvar/save_schedule.php',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function () {
+                // exibe a mensagem de sucesso na caixa de diálogo
+                $('#success-modal').modal('show');
+
+                $('#schedule-form').show().fadeOut(3000, function () {
+                    // recarrega a página após a mensagem desaparecer
+                    location.reload();
+                });
+                // limpa o formulário
+                $('#schedule-form').trigger('reset');
+            }
+        });
+    });
 
     //teste de fazer um popup apareca e depois some e da um reset na pagina de deletar
     $('#delete').click(function () {
@@ -283,7 +340,7 @@ $(function () {
             $('#event-details-modal').modal('hide');
             $('#delete-modal').modal('show');
             $('#confirm-delete').click(function () {
-                location.href = "./delete_schedule.php?id=" + id;
+                location.href = "../../funcao_deletar/delete_schedule.php?id=" + id;
             });
             $('#delete-modal').on('hidden.bs.modal', function (e) {
                 $('#event-details-modal').modal('show');
@@ -309,7 +366,7 @@ $(function () {
             $('#event-details-modal-feriado').modal('hide');
             $('#delete-modal-feriado').modal('show');
             $('#confirm-delete-feriado').click(function () {
-                location.href = "./delete_feriado.php?id=" + id;
+                location.href = "../../funcao_deletar/delete_feriado.php?id=" + id;
             });
             $('#delete-modal-feriado').on('hidden.bs.modal', function (e) {
                 $('#event-details-modal-feriado').modal('show');
@@ -401,85 +458,6 @@ $(function () {
     //     });
 
     // });
-
-    // Form reset listener
-    $('#schedule-form').on('reset', function () {
-        $(this).find('input:hidden').val('')
-        $(this).find('input:visible').first().focus()
-    })
-
-    // Editar botão de criar aula
-
-    $(document).ready(function () {
-
-        $('#edit').click(function () {
-            var id = $(this).attr('data-id')
-            if (!!scheds[id]) {
-                var _form = $('#schedule-form')
-                console.log(String(scheds[id].horario_inicio), String(scheds[id].horario_inicio).replace(" ", "\\t"))
-                _form.find('[name="id"]').val(id)
-                _form.find('[name="title"]').val(scheds[id].ra_docente) //altera para usuario_id
-                _form.find('[name="description"]').val(scheds[id].id_uc)
-                _form.find('[name="start_datetime"]').val(String(scheds[id].horario_inicio).replace(" ", "T"))
-                _form.find('[name="end_datetime"]').val(String(scheds[id].horario_fim).replace(" ", "T"))
-                $('#event-details-modal').modal('hide')
-                _form.find('[name="title"]').focus()
-            } else {
-                alert("Event is undefined");
-            }
-        })
-    });
-
-
-    // Editar botão de criar aula
-    $(document).ready(function () {
-        $('#edit-evento').click(function () {
-            var id = $(this).attr('data-id')
-            if (!!scheds[id]) {
-                var _form = $('#schedule-form')
-                console.log(String(scheds[id].horario_inicio), String(scheds[id].horario_inicio).replace(" ", "\t"))
-                _form.find('[name="id"]').val(id)
-                _form.find('[name="title"]').val(scheds[id].ra_docente) //altera para usuario_id
-                _form.find('[name="description"]').val(scheds[id].id_uc)
-                _form.find('[name="start_datetime"]').val(String(scheds[id].horario_inicio).replace(" ", "T"))
-                _form.find('[name="end_datetime"]').val(String(scheds[id].horario_fim).replace(" ", "T"))
-                $('#event-details-modal-feriado').modal('hide')
-                _form.find('[name="title]').focus()
-            } else {
-                alert("Event is undefined");
-            }
-        })
-    });
-
-    // Editar botão de feriados
-
-
-
-    //teste de fazer um popup apareca e depois some e da um reset na pagina
-
-    $('#schedule-form').on('submit', function (e) {
-        e.preventDefault();
-
-        // faz o envio do formulário via AJAX
-        $.ajax({
-            url: './save_schedule.php',
-            method: 'POST',
-            data: $(this).serialize(),
-            success: function () {
-                // exibe a mensagem de sucesso na caixa de diálogo
-                $('#success-modal').modal('show');
-
-                $('#schedule-form').show().fadeOut(3000, function () {
-                    // recarrega a página após a mensagem desaparecer
-                    location.reload();
-                });
-                // limpa o formulário
-                $('#schedule-form').trigger('reset');
-            }
-        });
-    });
-
-
 
 
     //Arraste e redimensionamento de eventos

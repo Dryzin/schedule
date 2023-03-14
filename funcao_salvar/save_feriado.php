@@ -1,5 +1,5 @@
 <?php 
-require_once('db-connect.php');
+require_once('../db-connect.php');
 if($_SERVER['REQUEST_METHOD'] !='POST'){
     echo "<script> alert('Error: No data to save.'); location.replace('./') </script>";
     $conn->close();
@@ -13,9 +13,9 @@ if(empty($id)){
 }else{
   $sql = "UPDATE `feriado` set `titulo` = '{$titulo}', `descricao` = '{$descricao}', `horario_inicio` = '{$horario_inicio}', `horario_fim` = '{$horario_fim}' where `id` = '{$id}'";
 }
-$conn->query($sql); 
+$save = $conn->query($sql); 
 
 $conn->close();
-header("Location: http://localhost/schedule/"); // substitua a barra com a URL da sua página inicial
+header("Location: http://localhost/schedule/views/adm/"); // substitua a barra com a URL da sua página inicial
 exit();
 ?>

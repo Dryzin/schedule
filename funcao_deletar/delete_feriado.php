@@ -1,5 +1,5 @@
 <?php 
-require_once('db-connect.php');
+require_once('../db-connect.php');
 if(!isset($_GET['id'])){
     echo "<script> alert('ID de agendamento indefinido.'); location.replace('./') </script>";
     $conn->close();
@@ -19,6 +19,6 @@ $delete1 = $conn->query("DELETE FROM `feriado` where id = '{$_GET['id']}'");
 
 
 $conn->close();
-header("Location: http://localhost/schedule/"); // substitua a barra com a URL da sua página inicial
+header("Location: http://localhost/schedule/views/adm/"); // substitua a barra com a URL da sua página inicial
 exit();
 ?>
