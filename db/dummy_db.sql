@@ -13,22 +13,22 @@ SET time_zone = "+00:00";
 
 #criação de uma tabela
 CREATE TABLE usuario (
-id INT AUTO_INCREMENT PRIMARY KEY,
+ra_user INT PRIMARY KEY,
 nome VARCHAR(255),
-cpf VARCHAR(255),
+email VARCHAR(50) UNIQUE NOT NULL,
+senha VARCHAR(32) NOT NULL,
 tipo ENUM('docente', 'administrador')
 );
 
 CREATE TABLE docentes (
-ra INT PRIMARY KEY,
-usuario_id INT unique,
-FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+ra INT PRIMARY KEY unique,
+FOREIGN KEY (ra) REFERENCES usuario(ra_user)
 );
 
 CREATE TABLE turma (
 id INT PRIMARY KEY,
 nome VARCHAR(255),
-tipo ENUM('trilhas', 'aprendizagem'),
+tipo ENUM('Trilhas', 'Aprendizagem', 'PSG,', 'Pago', 'MBA'),
 carga_horaria Time
 );
 
@@ -53,6 +53,14 @@ FOREIGN KEY (ra_docente) REFERENCES docentes (ra),
 FOREIGN KEY (id_uc) REFERENCES uc (id)
 );
 
+CREATE TABLE feriado (
+id INT AUTO_INCREMENT PRIMARY KEY,
+titulo VARCHAR(32) NOT NULL,
+descricao VARCHAR(32) NOT NULL,
+horario_inicio DATETIME NOT NULL,
+horario_fim DATETIME DEFAULT NULL
+);
+
 DELIMITER $$
 
 CREATE TRIGGER check_conflito_horario
@@ -72,20 +80,63 @@ SET MESSAGE_TEXT = 'Professor já está ocupado em outro horário no mesmo perí
 END IF;
 END$$
 
-
-CREATE TRIGGER update_carga_horaria
+CREATE TRIGGER INSERT_carga_horaria
 AFTER INSERT ON calendario_de_aula
 FOR EACH ROW
 BEGIN
-UPDATE uc
-SET carga_horaria = carga_horaria - INTERVAL 4 HOUR
-WHERE id = NEW.id_uc;
+    DECLARE carga_horaria_aula INT;
+    SET carga_horaria_aula = TIMESTAMPDIFF(HOUR, NEW.horario_inicio, NEW.horario_fim);
 
-UPDATE turma
-SET carga_horaria = carga_horaria - INTERVAL 4 HOUR
-WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
+    UPDATE uc
+    SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
+    WHERE id = NEW.id_uc;
+
+    UPDATE turma
+    SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
+    WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
 END$$
 
+CREATE TRIGGER update_carga_horaria_update
+AFTER UPDATE ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    DECLARE carga_horaria_aula INT;
+    SET carga_horaria_aula = TIMESTAMPDIFF(HOUR, OLD.horario_inicio, OLD.horario_fim);
+
+    UPDATE uc
+    SET carga_horaria = carga_horaria + INTERVAL carga_horaria_aula HOUR
+    WHERE id = OLD.id_uc;
+
+    UPDATE turma
+    SET carga_horaria = carga_horaria + INTERVAL carga_horaria_aula HOUR
+    WHERE id = (SELECT num_turma FROM uc WHERE id = OLD.id_uc);
+
+    SET carga_horaria_aula = TIMESTAMPDIFF(HOUR, NEW.horario_inicio, NEW.horario_fim);
+
+    UPDATE uc
+    SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
+    WHERE id = NEW.id_uc;
+
+    UPDATE turma
+    SET carga_horaria = carga_horaria - INTERVAL carga_horaria_aula HOUR
+    WHERE id = (SELECT num_turma FROM uc WHERE id = NEW.id_uc);
+END$$
+
+CREATE TRIGGER delete_carga_horaria
+AFTER DELETE ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    DECLARE carga_horaria_aula INT;
+    SET carga_horaria_aula = TIMESTAMPDIFF(HOUR, OLD.horario_inicio, OLD.horario_fim);
+
+    UPDATE uc
+    SET carga_horaria = carga_horaria + INTERVAL carga_horaria_aula HOUR
+    WHERE id = OLD.id_uc;
+
+    UPDATE turma
+    SET carga_horaria = carga_horaria + INTERVAL carga_horaria_aula HOUR
+    WHERE id = (SELECT num_turma FROM uc WHERE id = OLD.id_uc);
+END$$
 
 CREATE TRIGGER check_carga_horaria_uc
 BEFORE INSERT ON uc
@@ -126,20 +177,40 @@ CREATE TRIGGER check_tipo_usuario_before_insert
 BEFORE INSERT ON docentes
 FOR EACH ROW
 BEGIN
-IF (SELECT tipo FROM usuario WHERE id = NEW.usuario_id) != 'docente' THEN
+IF (SELECT tipo FROM usuario WHERE ra_user = NEW.ra) != 'docente' THEN
 SIGNAL SQLSTATE '45000'
 SET MESSAGE_TEXT = 'Somente usuários do tipo "docente" podem ser inseridos na tabela "docentes".';
 END IF;
 END$$
 
+CREATE TRIGGER tr_calendario_de_aula_insert
+BEFORE INSERT ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    IF NEW.horario_fim < NEW.horario_inicio THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'O horário de fim não pode ser anterior ao horário de início.';
+    END IF;
+END$$
+
+CREATE TRIGGER tr_calendario_de_aula_update
+BEFORE update ON calendario_de_aula
+FOR EACH ROW
+BEGIN
+    IF NEW.horario_fim < NEW.horario_inicio THEN
+        SIGNAL SQLSTATE '45000' 
+            SET MESSAGE_TEXT = 'O horário de fim não pode ser anterior ao horário de início.';
+    END IF;
+END$$
+
 DELIMITER ;
 
 #INSERTS
-INSERT INTO usuario (nome, cpf, tipo)
-VALUES ('João da Silva', '111.111.111-11', 'administrador'), ('Matheus', '222.222.222-22', 'docente'), ('Cadu', '333.333.333-33', 'docente');
+INSERT INTO usuario (ra_user, nome, email, senha, tipo)
+VALUES ('1001','João da Silva','joao@', '123', 'administrador'), ('1002','Matheus','matheus@', '123', 'docente'), ('1003','Cadu','cadu@', '123', 'docente');
 
-INSERT INTO docentes (ra, usuario_id)
-VALUES (1002, 2), (1003, 3);
+INSERT INTO docentes (ra)
+VALUES (1002), (1003);
 
 INSERT INTO turma (id, nome, tipo, carga_horaria)
 VALUES
@@ -148,7 +219,6 @@ VALUES
 INSERT INTO uc (nome_uc, num_turma, carga_horaria)
 VALUES ('web', 222, '50:00:00'),('desktop', 333, '40:00:00'), ('mobile', 222, '10:00:00'),('hardware', 333, '32:00:00'), ('Arquivos digitais', 444, '12:00:00') ;
 
-
 INSERT INTO `calendario_de_aula` (`ra_docente`, `id_uc`, `horario_inicio`, `horario_fim`) VALUES
-(1002, 1, '2023-02-19 07:30:00', '2023-02-19 11:30:00'),
-(1003, 2, '2023-02-20 13:30:00', '2023-02-20 17:30:00');
+(1002, 1, '2023-03-19 07:30:00', '2023-03-19 11:30:00'),
+(1003, 2, '2023-03-20 13:30:00', '2023-03-20 17:30:00');

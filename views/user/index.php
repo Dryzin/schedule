@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../../fullcalendar/lib/main.min.css">
     <link rel="stylesheet" href="../../css/test.css">
 
+
     <!-- teste de fazer um popup apareca e depois some e da um reset na pagina de salvar e deletar-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" integrity="sha512-CtCzRfZlMEvJzFpKkAl97SlNf1ysh3/nqK/O47XQ2NlA/h8zv+QlLx0cZdHw78W8evv+E0g0Xr85tHrT0Z8RvA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js" integrity="sha512-Gi7RveP32a9p7VU1OWaqcWfZiFGmpn4n4+hGKnIMHmAT8yvy/KPlm9mSdFzsB6ZcJdjmnFca0If0I4d4wSMkCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -29,8 +30,6 @@
     <script src="../../fullcalendar/lib/main.min.js"></script>
     <script src='../../js/pt-br.js'></script>
 
-    
-
    
 </head>
 
@@ -38,30 +37,7 @@
 <body class="bg-light">
 
 
-<div class="navegation">
-        <nav>
-            <input type="checkbox" id="nav-toggle">
-            <div class="logo"> <h1>Ca<span1>l</span1><span>l</span>endar</h1></div>
-           <ul class="links">
-               <li><a href="#home">Home</a></li>
-               <li><a href="#about">Calendário</a></li>
-               <li><a href="#work">Cursos</a></li>
-               <li><a href="#contact">Docente</a></li>
-           </ul>
-           <label for="nav-toggle" class="icon-burger">
-               <div class="line"></div>
-               <div class="line"></div>
-               <div class="line"></div>
-           </label>
-        </nav>
-    
-        <label for="nav-toggle" class="icon-burger">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-        </label>
-    
-    </div>
+    </table>
 
     <div class="container py-3" id="page-container">
 

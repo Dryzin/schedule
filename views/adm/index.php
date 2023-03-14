@@ -25,15 +25,11 @@
 
     <!-- teste de popup de nao pode modificar um feriadoz para adicionar uma aula -->
     <script src="../../js/jquery-3.6.0.min.js"></script>
-    <script src="../../js/editar.js"></script>
     <script src="../../js/bootstrap.min.js"></script>
     <script src="../../fullcalendar/lib/main.min.js"></script>
     <script src='../../js/pt-br.js'></script>
-    <script src="../../js/script.js"></script>
 
 
-
-    
 </head>
 
 
@@ -302,36 +298,86 @@
             </div>
             <div class="col-md-3">
                 <div class="cardt rounded-0 shadow">
-                    <div class="card-header bg-gradient bg-primary text-light">
-                        <h5 class="card-title">Criar Aula</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="container-fluid">
-                            <form action="../../save_schedule.php" method="post" id="schedule-form">
-                                <input type="hidden" name="id" value="">
-                                <div class="form-group mb-2">
-                                        <label for="title" class="control-label">RA</label>
-                                        <input type="text" class="form-control form-control-sm rounded-0" name="title" id="title" required>
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="description" class="control-label">ID (Unidade)</label>
-                                    <textarea rows="3" class="form-control form-control-sm rounded-0" name="description" id="description" required></textarea>
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="start_datetime" class="control-label">Começo</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="start_datetime" id="start_datetime" required>
-                                </div>
-                                <div class="form-group mb-2">
-                                    <label for="end_datetime" class="control-label">Fim</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
-                                </div>
-                            </form>
+                    <div id="aula-form" style="display: block;">
+                        <div class="card-header bg-gradient bg-primary text-light">
+                            <h4 class="card-title">Adicionar aula</h4>
+                            <button id="trocar-form-btn-feriado" type="button">Cadastrar Feriado</button>
                         </div>
+                        <div class="card-body">
+                            <div class="container-fluid">
+                            
+                                    <form action="../../save_schedule.php" method="post" id="schedule-form">                               
+                                        <input type="hidden" name="id" value="">
+                                        <div class="form-group mb-2">
+                                                <label for="title" class="control-label">RA</label>
+                                                <input type="text" class="form-control form-control-sm rounded-0" name="title" id="title" required>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label for="description" class="control-label">ID (Unidade)</label>
+                                            <textarea rows="3" class="form-control form-control-sm rounded-0" name="description" id="description" required></textarea>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label for="start_datetime" class="control-label">Começo</label>
+                                            <input type="datetime-local" class="form-control form-control-sm rounded-0" name="start_datetime" id="start_datetime" required>
+                                        </div>
+                                        <div class="form-group mb-2">
+                                            <label for="end_datetime" class="control-label">Fim</label>
+                                            <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
+                                        </div>
+                                    </form>
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="text-center">
+                                    <button class="btn btn-primary btn-sm rounded-0" type="submit" form="schedule-form"><i class="fa fa-save"></i> Salvar</button>
+                                    <button class="btn btn-default border btn-sm rounded-0" type="reset" form="schedule-form"><i class="fa fa-reset"></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="card-footer">
-                        <div class="text-center">
-                            <button class="btn btn-primary btn-sm rounded-0" type="submit" form="schedule-form"><i class="fa fa-save"></i> Salvar</button>
-                            <button class="btn btn-default border btn-sm rounded-0" type="reset" form="schedule-form"><i class="fa fa-reset"></i> Cancelar</button>
+
+                    <div id="feriado-form" style="display: none;" class="card-body">    
+                        <div class="card-header bg-gradient bg-primary text-light">
+                            <h4 class="card-title">Adicionar Feriado</h4>
+                            <button id="trocar-form-btn-aula" type="button">Cadastrar Aula</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="container-fluid">
+                            
+                                <form action="../../save_feriado.php" method="post" id="schedule-form1">
+                                <input type="hidden" name="id" value="">
+                                
+                                    <div class="form-group mb-2">
+                                        <label for="title" class="control-label">Nome:</label>
+                                        <input type="text" class="form-control form-control-sm rounded-0" name="titulo" id="titulo" required>
+                                    </div>
+
+                                    <div class="form-group mb-2">
+                                        <label for="title" class="control-label">Descrição:</label>
+                                        <input type="text" class="form-control form-control-sm rounded-0" name="descricao" id="descricao" required>
+                                    </div>
+
+                                    <div class="form-group mb-2">
+                                        <label for="start_datetime" class="control-label">Começo</label>
+                                        <input type="datetime-local" class="form-control form-control-sm rounded-0" name="horario_inicio" id="horario_inicio" required>
+                                    </div>
+
+                                    <div class="form-group mb-2">
+                                        <label for="end_datetime" class="control-label">Fim</label>
+                                        <input type="datetime-local" class="form-control form-control-sm rounded-0" name="horario_fim" id="horario_fim" required>
+                                    </div>
+
+                                </form>
+                            </div>
+
+                            <div class="card-footer">
+                                <div class="text-center">
+                                    <button class="btn btn-primary btn-sm rounded-0" type="submit" form="schedule-form1"><i class="fa fa-save"></i> Salvar</button>
+                                    <button class="btn btn-default border btn-sm rounded-0" type="reset" form="schedule-form1"><i class="fa fa-reset"></i> Cancelar</button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -433,5 +479,7 @@ if (isset($conn)) $conn->close();
 <script>
 var scheds = $.parseJSON('<?= json_encode($sched_res) ?>');
 </script>
+
+<script src="../../js/script.js"></script>
 
 </html>

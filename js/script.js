@@ -1,11 +1,19 @@
 var calendar;
 var Calendar = FullCalendar.Calendar;
 var events = [];
+
+const aulaForm = document.getElementById("aula-form");
+const feriadoForm = document.getElementById("feriado-form");
+
+const trocarFormBtn = document.getElementById("trocar-form-btn-feriado");
+const trocarFormBtn2 = document.getElementById("trocar-form-btn-aula");
+
 $(function () {
+
     if (!!scheds) {
         Object.keys(scheds).map(k => {
             var row = scheds[k]
-            events.push({ id: row.id, title: row.ra_docente, start: row.horario_inicio, end: row.horario_fim });
+            events.push({ id: row.id, title: row.ra_docente, start: row.horario_inicio, end: row.horario_fim });          
         })
     }
     var date = new Date()
@@ -20,6 +28,7 @@ $(function () {
             center: 'dayGridMonth,dayGridWeek,list',
             locale: 'pt-br'
         },
+      
         locale: 'pt-br',
         selectable: true, // inicio do evento de select de varias datas e ja preenchar os inputs da data inicio e fim
         editable: true, // inicio evento de fazer as edições
@@ -28,39 +37,6 @@ $(function () {
         //Random default events
         events: events,
 
-        // traducao completa dos dias ( feito por Rafael )
-        dayHeaderContent: function(arg) {
-            var dayOfWeek = arg.date.getUTCDay();
-            var customDayName;
-            
-            switch (dayOfWeek) {
-                case 0:
-                    customDayName = 'Domingo';
-                    break;
-                case 1:
-                    customDayName = 'Segunda';
-                    break;
-                case 2:
-                    customDayName = 'Terça';
-                    break;
-                case 3:
-                    customDayName = 'Quarta';
-                    break;
-                case 4:
-                    customDayName = 'Quinta';
-                    break;
-                case 5:
-                    customDayName = 'Sexta';
-                    break;
-                case 6:
-                    customDayName = 'Sábado';
-                    break;
-                default:
-                    customDayName = arg.text;
-            }
-            
-            return customDayName;
-        },  
 
         // inicio evento de varias datas e ja preenchar os inputs da data inicio e fim e ja formatado para o banco reconhecer como string
         select: async (arg) => {
@@ -133,8 +109,8 @@ $(function () {
                     $('#feriado-modal').modal('hide');
                 });
 
-                // Esconde o formulário
-                $('#popup-container').hide();
+                // // Esconde o formulário
+                // $('#popup-container').hide();
 
                 return;
             }
@@ -147,13 +123,44 @@ $(function () {
             $('#start_datetime').val(startDatetime);
             $('#end_datetime').val(endDatetime);
 
-            $('#event-start').val(startDatetime);
-            $('#event-end').val(endDatetime);
+            $('#horario_inicio').val(startDatetime);
+            $('#horario_fim').val(endDatetime);
 
             // $('#popup-container').show();
         },
 
-
+        dayHeaderContent: function(arg) {
+            var dayOfWeek = arg.date.getUTCDay();
+            var customDayName;
+            
+            switch (dayOfWeek) {
+                case 0:
+                    customDayName = 'Domingo';
+                    break;
+                case 1:
+                    customDayName = 'Segunda';
+                    break;
+                case 2:
+                    customDayName = 'Terça';
+                    break;
+                case 3:
+                    customDayName = 'Quarta';
+                    break;
+                case 4:
+                    customDayName = 'Quinta';
+                    break;
+                case 5:
+                    customDayName = 'Sexta';
+                    break;
+                case 6:
+                    customDayName = 'Sábado';
+                    break;
+                default:
+                    customDayName = arg.text;
+            }
+            
+            return customDayName;
+        },  
 
 
         // Fim evento de varias datas e ja preenchar os inputs da data inicio e fim e ja formatado para o banco reconhecer como string
@@ -241,7 +248,7 @@ $(function () {
     // Aqui ele acha a api de feriados
     function getFeriados() {
         return $.ajax({
-            url: 'http://localhost/schedule/api_feriado/api_feriado.php',
+            url: 'http://localhost/schedule/api_feriado.php',
             dataType: 'json',
             success: function (response) {
                 return response;
@@ -316,7 +323,7 @@ $(function () {
 
         // faz o envio do formulário via AJAX
         $.ajax({
-            url: '../../funcao_salvar/save_schedule.php',
+            url: '../../save_schedule.php',
             method: 'POST',
             data: $(this).serialize(),
             success: function () {
@@ -333,6 +340,31 @@ $(function () {
         });
     });
 
+
+    //teste de fazer um popup apareca e depois some e da um reset na pagina
+
+    $('#schedule-form1').on('submit', function (e) {
+        e.preventDefault();
+
+        // faz o envio do formulário via AJAX
+        $.ajax({
+            url: '../../save_feriado.php',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function () {
+                // exibe a mensagem de sucesso na caixa de diálogo
+                $('#success-modal').modal('show');
+
+                $('#schedule-form1').show().fadeOut(3000, function () {
+                    // recarrega a página após a mensagem desaparecer
+                    location.reload();
+                });
+                // limpa o formulário
+                $('#schedule-form1').trigger('reset');
+            }
+        });
+    });
+
     //teste de fazer um popup apareca e depois some e da um reset na pagina de deletar
     $('#delete').click(function () {
         var id = $(this).attr('data-id');
@@ -340,7 +372,7 @@ $(function () {
             $('#event-details-modal').modal('hide');
             $('#delete-modal').modal('show');
             $('#confirm-delete').click(function () {
-                location.href = "../../funcao_deletar/delete_schedule.php?id=" + id;
+                location.href = "../../delete_schedule.php?id=" + id;
             });
             $('#delete-modal').on('hidden.bs.modal', function (e) {
                 $('#event-details-modal').modal('show');
@@ -366,7 +398,7 @@ $(function () {
             $('#event-details-modal-feriado').modal('hide');
             $('#delete-modal-feriado').modal('show');
             $('#confirm-delete-feriado').click(function () {
-                location.href = "../../funcao_deletar/delete_feriado.php?id=" + id;
+                location.href = "../../delete_feriado.php?id=" + id;
             });
             $('#delete-modal-feriado').on('hidden.bs.modal', function (e) {
                 $('#event-details-modal-feriado').modal('show');
@@ -389,104 +421,110 @@ $(function () {
 
 
 
-    //  teste de  justificativa
+  
 
-    // Obtém o formulário e adiciona o evento "submit"
-    // $(document).ready(function () {
-    //     const eventForm = document.getElementById("event-form");
-    //     eventForm.addEventListener("submit", (event) => {
-    //         event.preventDefault(); // Impede que a página seja recarregada
-
-    //         // Obtém os dados do formulário
-    //         const formData = new FormData(event.target);
-
-    //         // Verifica se os campos obrigatórios foram preenchidos
-    //         if (!eventForm.checkValidity()) {
-    //             // Exibe mensagem de erro
-    //             console.error("Erro ao salvar evento! Campos obrigatórios não preenchidos.");
-    //             return;
-    //         }
-
-    //         // Realiza a requisição AJAX utilizando o método POST
-    //         fetch("./save_feriado.php", {
-    //             method: "POST",
-    //             body: formData,
-
-    //         })
+    // Form reset listener
+    $('#schedule-form').on('reset', function () {
+        $(this).find('input:hidden').val('')
+        $(this).find('input:visible').first().focus()
+    })
 
 
-    //         //   reseta a página após 3 segundos
-    //         setTimeout(function () {
-    //             location.reload();
-    //         },);
+    
+    // Form reset listener
+    $('#schedule-form1').on('reset', function () {
+        $(this).find('input:hidden').val('')
+        $(this).find('input:visible').first().focus()
+    })
+    // Editar botão de criar aula
+
+    $(document).ready(function () {
+
+        $('#edit').click(function () {
+            var id = $(this).attr('data-id')
+            if (!!scheds[id]) {
+                var _form = $('#schedule-form')
+                console.log(String(scheds[id].horario_inicio), String(scheds[id].horario_inicio).replace(" ", "\\t"))
+                _form.find('[name="id"]').val(id)
+                _form.find('[name="title"]').val(scheds[id].ra_docente) //altera para usuario_id
+                _form.find('[name="description"]').val(scheds[id].id_uc)
+                _form.find('[name="start_datetime"]').val(String(scheds[id].horario_inicio).replace(" ", "T"))
+                _form.find('[name="end_datetime"]').val(String(scheds[id].horario_fim).replace(" ", "T"))
+                $('#event-details-modal').modal('hide')
+                _form.find('[name="title"]').focus()
+            } else {
+                alert("Event is undefined");
+            }
+        })
+    });
 
 
-    //     });
-    // });
+    // Editar botão de criar aula
+    $(document).ready(function () {
+        $('#edit-evento').click(function () {
+            var id = $(this).attr('data-id')
+            if (!!scheds[id]) {
+                var _form = $('#schedule-form1')
+                console.log(String(scheds[id].horario_inicio), String(scheds[id].horario_inicio).replace(" ", "\t"))
+                _form.find('[name="id"]').val(id)
+                _form.find('[name="titulo"]').val(scheds[id].ra_docente) //altera para usuario_id
+                _form.find('[name="descricao"]').val(scheds[id].id_uc)
+                _form.find('[name="horario_inicio"]').val(String(scheds[id].horario_inicio).replace(" ", "T"))
+                _form.find('[name="horario_fim"]').val(String(scheds[id].horario_fim).replace(" ", "T"))
+                $('#event-details-modal-feriado').modal('hide')
+                _form.find('[name="titulo]').focus()
+            } else {
+                alert("Event is undefined");
+            }
+        })
+    });
 
-    // $(document).ready(function () {
+    // Editar botão de feriados
 
-    //     // Obtém o elemento input da data de início
-    //     const startInput = document.getElementById("event-start");
-    //     startInput.addEventListener("change", () => {
-    //         // Obtém o valor da data selecionada
-    //         const startDate = startInput.value;
-    //         // Preenche os inputs de data com o valor da data selecionada
-    //         document.getElementById("event-start").value = startDate;
-    //         document.getElementById("event-end").value = startDate;
-    //     });
-
-    //     // Mostra o popup ao clicar no botão "Adicionar Evento"
-    //     $("#add-event").click(function () {
-    //         // exibe o conteúdo do pop-up
-    //         $("#popup-container").show();
-
-    //     });
-    //     // aqui o usuario não queira fazer mais feriados e cancela e ja sai da pagina
-    //     $("#cancel-event").click(function () {
-    //         // esconde o conteúdo do pop-up
-    //         $("#popup-container").hide();
+trocarFormBtn.addEventListener("click", () => {
+    aulaForm.style.display = "none";
+    feriadoForm.style.display = "block";
+  });
+  
+  trocarFormBtn2.addEventListener("click", () => {
+    feriadoForm.style.display = "none";
+    aulaForm.style.display = "block";
+  });
+    //teste de fazer um popup apareca e depois some e da um reset na pagina
 
 
 
-    //         $("save-event").click(function () {
-    //             // exibe o conteúdo do pop-up
-    //             location.reload();
-    //             $("#popup-container").show();
-    //             location.reload();
-    //         });
-    //     });
-
-    // });
 
 
     //Arraste e redimensionamento de eventos
     // função que faz a converção de mês, data e minutos para string, para o banco reconhcer 
-    async function resizeAndDrop(info) {
+
+    //Arraste e redimensionamento de eventos
+    async function resizeAndDrop(info){
         let newDate = new Date(info.event.start);
-        let month = ((newDate.getMonth() + 1) < 9) ? "0" + (newDate.getMonth() + 1) : newDate.getMonth() + 1;
-        let day = ((newDate.getDate()) < 9) ? "0" + newDate.getDate() : newDate.getDate();
-        let minutes = ((newDate.getMinutes()) < 9) ? "0" + newDate.getMinutes() : newDate.getMinutes();
+        let month = ((newDate.getMonth()+1)<9)?"0"+(newDate.getMonth()+1):newDate.getMonth()+1;
+        let day = ((newDate.getDate())<9)?"0"+newDate.getDate():newDate.getDate();
+        let minutes = ((newDate.getMinutes())<9)?"0"+newDate.getMinutes():newDate.getMinutes();
         newDate = `${newDate.getFullYear()}-${month}-${day} ${newDate.getHours()}:${minutes}:00`
 
         let newDateEnd = new Date(info.event.end);
-        let monthEnd = ((newDateEnd.getMonth() + 1) < 9) ? "0" + (newDateEnd.getMonth() + 1) : newDateEnd.getMonth() + 1;
-        let dayEnd = ((newDateEnd.getDate()) < 9) ? "0" + newDateEnd.getDate() : newDateEnd.getDate();
-        let minutesEnd = ((newDateEnd.getMinutes()) < 9) ? "0" + newDateEnd.getMinutes() : newDateEnd.getMinutes();
+        let monthEnd = ((newDateEnd.getMonth()+1)<9)?"0"+(newDateEnd.getMonth()+1):newDateEnd.getMonth()+1;
+        let dayEnd = ((newDateEnd.getDate())<9)?"0"+newDateEnd.getDate():newDateEnd.getDate();
+        let minutesEnd = ((newDateEnd.getMinutes())<9)?"0"+newDateEnd.getMinutes():newDateEnd.getMinutes();
         newDateEnd = `${newDateEnd.getFullYear()}-${monthEnd}-${dayEnd} ${newDateEnd.getHours()}:${minutesEnd}:00`
 
+        console.log(info.event.start);
+        console.log(info.event.end);
 
-
-        let reqs = await fetch('http://localhost/schedule/ControllerDrop.php', {    // função o envio de conversão para o update no banco, ( mudar o caminho da url para que assim ele reconheça o caminho do arquivo EX: http://localhost/nome-que-esta-na-url/ControllerDrop.php' ) 
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+        let reqs = await fetch('http://localhost/schedule/ControllerDrop.php',{
+            method:'post',
+            headers:{
+                'Content-Type':'application/x-www-form-urlencoded'
             },
-            body: `id=${info.event.id}&start=${newDate}&end=${newDateEnd}`
+            body:`id=${info.event.id}&start=${newDate}&end=${newDateEnd}`
         });
         let ress = await reqs.json();
     }
 
 
-
-})
+});

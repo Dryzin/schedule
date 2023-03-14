@@ -111,48 +111,23 @@ nav .icon-burger .line {
     transition: all .5s ease-in-out;
 }
 
-@media screen and (max-width: 1500px) {
+#aula-form .card-title {
+  padding-top: 15px;
+}
 
-  nav .logo {
-    float: none;
-    width: auto;
-    justify-content: center;
+#trocar-form-btn-feriado{
+  border: none;
+  background-color: #fafafa;
+  font-size: 14px;
+
 }
-nav .links {
-    float: none;
-    position: fixed;
-    z-index: 9;
-    left: 0;
-    right: 0;
-    top: 110px;
-    bottom: 100%;
-    width: auto;
-    height: auto;
-    flex-direction: column;
-    justify-content: space-evenly;
-    background-color: #161616;
-    overflow: hidden;
-    transition: all .3s ease-in-out;
+
+#trocar-form-btn-aula {
+  border: none;
+  background-color: #fafafa;
+  font-size: 14px;
 }
-nav .links a {
-    font-size: 25px;
-}
-nav :checked ~ .links {
-    bottom: 0;
-}
-nav .icon-burger {
-    display: block;
-}
-nav :checked ~ .icon-burger .line:nth-child(1) {
-    transform: translateY(10px) rotate(225deg);
-}
-nav :checked ~ .icon-burger .line:nth-child(3) {
-    transform: translateY(-10px) rotate(-225deg);
-}
-nav :checked ~ .icon-burger .line:nth-child(2) {
-    opacity: 0;
-}
-}
+
 
 @media screen and (max-width: 768px) {
     nav .logo {
