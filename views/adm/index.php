@@ -64,6 +64,30 @@
     <div class="container py-3" id="page-container">
 
 
+<<<<<<< Updated upstream
+=======
+        <!-- teste de fazer um popup apareca e teste  de impeca de criar aula em feriados-->
+            <div class="modal" id="alerta-modal" tabindex="-1" role="dialog" aria-labelledby="feriado-modal-title">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="feriado-modal-title">Não é possível seleciona essa data.</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Por favor, selecione outra data para criar a aula ou feriado.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+>>>>>>> Stashed changes
 
         <!-- teste de fazer um popup apareca e teste  de impeca de criar aula em feriados-->
         <div class="modal" id="feriado-modal" tabindex="-1" role="dialog" aria-labelledby="feriado-modal-title">

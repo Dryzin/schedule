@@ -90,7 +90,22 @@ $(function () {
 
             // Verifica se a data de fim selecionada está no futuro ou não
             if (moment(arg.end).isBefore(moment())) {
+<<<<<<< Updated upstream
                 alert('A data de término selecionada já passou!');
+=======
+                // alert('A data de término selecionada já passou!');
+                // Exibe o modal de aviso
+                $('#alerta-modal').modal('show');
+                $('#alerta-modal .close').click(function () { // ele faz que quando cancelar ele volta para a tela de editar
+                    $('#alerts-modal').modal('hide');
+                });
+                $('#alerta-modal .close, #alerta-modal .modal-footer button').click(function () {
+                    $('#alerta-modal').modal('hide');
+                });
+
+                // // Esconde o formulário
+                // $('#popup-container').hide();
+>>>>>>> Stashed changes
                 return;
             }
             // Verifica se a data selecionada é um feriado
