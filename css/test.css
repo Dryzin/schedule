@@ -129,6 +129,49 @@ nav .icon-burger .line {
 }
 
 
+@media screen and (max-width: 1500px) {
+  nav .logo {
+      float: none;
+      width: auto;
+      justify-content: center;
+  }
+  nav .links {
+      float: none;
+      position: fixed;
+      z-index: 9;
+      left: 0;
+      right: 0;
+      top: 110px;
+      bottom: 100%;
+      width: auto;
+      height: auto;
+      flex-direction: column;
+      justify-content: space-evenly;
+      background-color: #161616;
+      overflow: hidden;
+      transition: all .3s ease-in-out;
+  }
+  nav .links a {
+      font-size: 25px;
+  }
+  nav :checked ~ .links {
+      bottom: 0;
+  }
+  nav .icon-burger {
+      display: block;
+  }
+  nav :checked ~ .icon-burger .line:nth-child(1) {
+      transform: translateY(10px) rotate(225deg);
+  }
+  nav :checked ~ .icon-burger .line:nth-child(3) {
+      transform: translateY(-10px) rotate(-225deg);
+  }
+  nav :checked ~ .icon-burger .line:nth-child(2) {
+      opacity: 0;
+  }
+}
+
+
 @media screen and (max-width: 768px) {
     nav .logo {
         float: none;
