@@ -40,10 +40,10 @@
             <input type="checkbox" id="nav-toggle">
             <div class="logo"> <h1>Ca<span1>l</span1><span>l</span>endar</h1></div>
            <ul class="links">
-               <li><a href="#home">Home</a></li>
-               <li><a href="#about">Calendário</a></li>
-               <li><a href="#work">Cursos</a></li>
-               <li><a href="#contact">Docente</a></li>
+               <li><a href="#">Calendário</a></li>
+               <li><a href="/schedule/telaCursos/index.php">Cursos</a></li>
+               <li><a href="/schedule/cadastrarUsuario/teste - Copia.html">Usuarios</a></li>
+               <li><a href="/schedule/">Sair</a></li>
            </ul>
            <label for="nav-toggle" class="icon-burger">
                <div class="line"></div>
@@ -64,8 +64,6 @@
     <div class="container py-3" id="page-container">
 
 
-<<<<<<< Updated upstream
-=======
         <!-- teste de fazer um popup apareca e teste  de impeca de criar aula em feriados-->
             <div class="modal" id="alerta-modal" tabindex="-1" role="dialog" aria-labelledby="feriado-modal-title">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -87,7 +85,6 @@
             </div>
         </div>
 
->>>>>>> Stashed changes
 
         <!-- teste de fazer um popup apareca e teste  de impeca de criar aula em feriados-->
         <div class="modal" id="feriado-modal" tabindex="-1" role="dialog" aria-labelledby="feriado-modal-title">
@@ -193,9 +190,15 @@
                             
                                     <form action="../../save_schedule.php" method="post" id="schedule-form">                               
                                         <input type="hidden" name="id" value="">
+
                                         <div class="form-group mb-2">
-                                                <label for="title" class="control-label">RA</label>
-                                                <input type="text" class="form-control form-control-sm rounded-0" name="title" id="title" required>
+  <label for="title" class="control-label">RA User</label>
+  <select class="form-control form-control-sm rounded-0" name="title" id="title" required>
+    <option value=""></option>
+  </select>
+  <input type="hidden" name="user_id" id="user_id">
+
+
                                         </div>
                                         <div class="form-group mb-2">
                                             <label for="description" class="control-label">ID (Unidade)</label>
@@ -346,9 +349,12 @@
 locale:
 'pt-br';
 
-$schedules = $conn->query("SELECT id, ra_docente, id_uc, horario_inicio, horario_fim, 'aula' as tipo FROM `calendario_de_aula`
+$schedules = $conn->query("SELECT c.id, u.nome as ra_docente, c.id_uc, c.horario_inicio, c.horario_fim, 'aula' as tipo 
+FROM `calendario_de_aula` c
+JOIN usuario u ON c.ra_docente = u.ra_user
                           UNION ALL
-                          SELECT id, titulo, descricao, horario_inicio, horario_fim, 'feriado' as tipo FROM `feriado`");
+                          SELECT id, titulo, descricao, horario_inicio, horario_fim, 'feriado' as tipo FROM `feriado`
+");
 
 $sched_res = [];
 foreach ($schedules->fetch_all(MYSQLI_ASSOC) as $row) {  

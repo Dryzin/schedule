@@ -1,0 +1,594 @@
+/* Estilos gerais */
+
+
+/* Nav bar */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600&display=swap');
+
+
+*{
+    box-sizing: border-box;
+    font-family: 'Nunito', sans-serif;
+}
+
+
+body {
+    background-color: #F5F5F5;
+    
+}
+
+button {
+    margin-top: 4px;
+    margin-left: 2px;
+    transform: translatey(-1%);
+    color: rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+    background-color: #F5F5F5;
+    border: none;
+  }
+  
+  i{
+      
+      font-size: 22px;
+      background-color: #F5F5F5;
+  }
+
+
+
+.table h1{
+    color: #434141;
+    margin-left: 5.2%;
+    margin-top: 4%;
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 48px;
+    font-family: 'Nunito', sans-serif;
+}
+
+
+
+.icones{
+    max-width: 10%;
+
+    display: flex;
+    margin-left: 49rem;
+    padding: 0rem;
+    
+    margin-top: -4rem;
+}
+
+.icones img{
+    
+    display: block;
+    margin-left: 0.9rem;
+    padding: 0rem;
+   
+
+}
+
+ #add{
+    margin-top: -0.1rem;
+}
+
+
+
+.app {
+    display: none;
+  }
+
+form {
+    max-width: 50%;
+    margin-top: 13rem;
+    margin-left: 6rem;
+  }
+
+  
+  .input-group {
+ 
+   
+    max-width: 73%;
+    
+ 
+    
+    
+    
+    
+  }
+  
+ 
+  input {
+    width: 97%;
+    height: 20px;
+    padding: 41px 22px 36px 22px;
+    outline: none;
+    font-size: 18px;
+    background: #F4F4F4;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    color: #434141;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+
+  }
+
+  input::placeholder{
+    bottom: 0px;
+    
+    color: #434141;
+  }
+  
+  input:focus {
+    border-color: #000000;
+  }
+  
+  input:focus + button {
+    transform: scale(1.05) translatey(-9%);
+    color: #000000;
+  }
+
+  .suggestion-list {
+    background-color: #F4F4F4;
+    padding: 18px 24px 6px 12px;
+    position: absolute;
+    width: 31%;
+    margin-top: 0px;
+    border-top: none;
+    
+  }
+  
+  .suggestion-list.hidden {
+    display: none;
+  }
+  
+  .suggestion-list p {
+    margin-bottom: 1px;
+  }
+  
+  .suggestion-list i {
+    margin-right: 12px;
+    color: #F27121;
+    
+  }
+  
+ 
+
+nav {
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    top: 0;
+    
+    height: 126px;
+    background-color: #133762;
+    padding: 0 5%;
+
+}
+nav .logo { 
+    float: left;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 60px;
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 38px;
+}
+
+span1{
+    color: #F78B1F;
+}
+
+span{
+    color: #005594;
+}
+
+nav .links {
+    float: right;
+    padding: 0;
+    margin: 0;
+    width: 38%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    
+}
+nav .links li {
+    list-style: none;
+}
+nav .links a {
+    display: block;
+    padding: 1em;
+    font-size: 27px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    position: relative;
+    
+}
+nav .links a:hover {
+    color: white;
+}
+nav .links a::before {
+    content: "";
+    position: absolute;
+    bottom: 24px;
+    left: 18px;
+    width: 33%;
+    height: 3px;
+    background-color: #F78B1F;
+    visibility: hidden;
+    transform: scaleX(0);
+    transition: all 0.1s ease-in-out 0s;
+}
+nav .links a:hover::before {
+    visibility: visible;
+    transform: scaleX(1);
+    color: white;
+}
+#nav-toggle {
+     position: absolute;
+     top: -100px;
+}
+nav .icon-burger {
+    display: none;
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+nav .icon-burger .line {
+    width: 30px;
+    height: 5px;
+    background-color: #fff;
+    margin: 5px;
+    border-radius: 3px;
+    transition: all .5s ease-in-out;
+}
+@media screen and (max-width: 768px) {
+
+    .icones{
+        margin-left: 25rem;
+        margin-top: 1rem;
+        display: grid;
+    }
+
+    input {
+        width: 100%;
+    height: 20px;
+    margin-left: 1rem;
+    margin-top: -4rem;
+        
+    }
+
+
+    nav .logo {
+        float: none;
+        width: auto;
+        justify-content: center;
+    }
+    nav .links {
+        float: none;
+        position: fixed;
+        z-index: 9;
+        left: 0;
+        right: 0;
+        top: 126px;
+        bottom: 100%;
+        width: auto;
+        height: auto;
+        flex-direction: column;
+        justify-content: space-evenly;
+        background-color: #161616;
+        overflow: hidden;
+        transition: all .3s ease-in-out;
+    }
+    nav .links a {
+        font-size: 25px;
+    }
+    nav :checked ~ .links {
+        bottom: 0;
+    }
+    nav .icon-burger {
+        display: block;
+    }
+    nav :checked ~ .icon-burger .line:nth-child(1) {
+        transform: translateY(10px) rotate(225deg);
+    }
+    nav :checked ~ .icon-burger .line:nth-child(3) {
+        transform: translateY(-10px) rotate(-225deg);
+    }
+    nav :checked ~ .icon-burger .line:nth-child(2) {
+        opacity: 0;
+    }
+}
+
+.linha{
+    display: flex;
+    flex-flow: row wrap;
+    margin-top: 1.5%;
+    margin-left: 5.2%;
+    }
+
+.coluna-18 {
+    width: 18.2%;
+ }
+
+
+/* Estilo do botão */
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  position: absolute;
+  top: 23.9%;
+  left: 37.6%;
+  padding: 10px;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  outline: none;
+}
+
+button img {
+  margin-right: 5px;
+}  
+  
+
+/* Estilos da tabela */
+table {
+	border-collapse: separate;
+  border-spacing:  0 8px;
+	margin-bottom: 2px;
+  margin-left: 5.2%;
+	width: 100%;
+  width: 1650px;
+  height: 420px;
+}
+
+table tr{
+  padding: 10px;
+  cursor: pointer;
+}
+
+table td {
+	border: 1px solid #000;
+	padding: 10px;
+	text-align: left;
+  width: 10px;
+  height: 50px;
+  box-sizing: border-box;
+}
+
+td a {
+  text-decoration: none; /* remove o sublinhado do link */
+  color: blue; /* define a cor do link */
+  cursor: pointer;
+}
+
+
+table th {
+  border: 1px solid #000;
+	padding: 10px;
+	text-align: left;
+	background-color: #f2f2f2;
+}
+
+.table-wrapper {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table-wrapper table {
+  border-spacing: 0;
+  width: 100%;
+}
+
+ 
+ 
+ .botao-toggle {
+	background-color: #ccc;
+	color: #005594;
+	border: none;
+	padding: 7px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+  margin-left: 24%;
+  border-radius: 10px;
+  width: 90px;
+  height: 35px;
+  }
+  
+  .botao-toggle:active {
+	background-color: #F78B1F;
+  }
+
+  .botao-toggle.ativo {
+	background-color: #F78B1F;
+  }
+  
+  .botao-toggle1 {
+    background-color: #ccc;
+    color: #005594;
+    border: none;
+    padding: 7px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    margin-left: 18%;
+    border-radius: 10px;
+    width: 100px;
+    height: 35px;
+    }
+
+    .botao-toggle1:active {
+      background-color: #F78B1F;
+      }
+    
+      .botao-toggle1.ativo {
+      background-color: #F78B1F;
+      }
+
+      /* Estilo modal Detalhes  */
+
+.info{
+  text-align: start;
+}
+
+#title{
+  font-family: 'Nunito', sans-serif;
+  font-style: normal;
+  font-weight:500;
+  font-size: 20px;
+  line-height: 21px;
+  color: #434141;
+ 
+}
+
+.info p {
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 21px;
+  text-align: start;
+  letter-spacing: 0.02em;
+  color: #434141;
+  
+ 
+}
+
+
+.uc{
+  position: absolute;
+  top: 65%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  background: #FBFBFB;
+  padding: 1.5rem 2.5rem;
+  height: 283px;
+  width: 224px;
+  border: 0.3px solid #000000;
+  border-radius: 15px;
+}
+
+.uc h1{
+  font-family: 'Nunito', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 23px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  color: #434141;
+  float: left;
+  margin-top: 0px;
+
+}
+
+.uc img{
+  margin-left: 8rem;
+  margin-top: -1rem;
+  height: 35px;
+  width: 35px;
+}
+
+.uc p{
+  left: 1rem;
+  margin-top: 0.2rem;
+  font-weight: 300;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: #434141;
+  text-align: start;
+
+}
+
+
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.1);
+  transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+}
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 1.5rem 2.5rem;
+  height: 533px;
+  width: 510px;
+  border-radius: 0.5rem;
+  
+}
+
+.modal-content h2{
+  color: #434141;
+  margin-top: 1px;
+  font-family: 'Nunito';
+font-style: normal;
+font-weight: 500;
+font-size: 30px;
+line-height: 41px;
+/* text-align: center; */
+letter-spacing: 0.02em;
+
+color: #434141;
+}
+.close-button {
+  float: right;
+  width: 1.5rem;
+  font-size: 1.2em;
+  line-height: 1;
+  padding: 0 .2em .15em;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 2rem;
+  background-color: #F78B1F;
+  color: #fff;
+  transition: color 0.12s ease-in-out;
+}
+
+.show-modal {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1.0);
+  transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+  backdrop-filter: blur(1px);
+  
+}
+
+/* Estilo botão faq */
+.faq{
+  display: block;
+  margin-left: 96%;
+  margin-top: 2%;
+}
+
+img{
+margin-left: 5.1%;
+
+}
+.bola {
+  display: block;
+  margin-top: -2rem;
+}

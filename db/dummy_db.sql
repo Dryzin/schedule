@@ -29,6 +29,8 @@ CREATE TABLE turma (
 id INT PRIMARY KEY,
 nome VARCHAR(255),
 tipo ENUM('Trilhas', 'Aprendizagem', 'PSG,', 'Pago', 'MBA'),
+sala VARCHAR(25),
+turno VARCHAR(25),
 carga_horaria Time
 );
 
@@ -211,10 +213,10 @@ VALUES ('1001','João da Silva','joao@', '123', 'administrador'), ('1002','Mathe
 
 INSERT INTO docentes (ra)
 VALUES (1002), (1003);
-
-INSERT INTO turma (id, nome, tipo, carga_horaria)
+  
+INSERT INTO turma (id, nome, tipo, sala,turno, carga_horaria)
 VALUES
-  ('0222','sistema','trilhas','820:00'),('0333','redes','trilhas','800:00'),('0444','administração','aprendizagem','780:00');
+('0222','sistema','trilhas','04','manhã','820:00'),('0333','redes','trilhas','14','manhã','800:00'),('0444','administração','aprendizagem','14','manhã','780:00');
   
 INSERT INTO uc (nome_uc, num_turma, carga_horaria)
 VALUES ('web', 222, '50:00:00'),('desktop', 333, '40:00:00'), ('mobile', 222, '10:00:00'),('hardware', 333, '32:00:00'), ('Arquivos digitais', 444, '12:00:00') ;

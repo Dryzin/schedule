@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <button class="trigger">Click the modal!</button>
+    <div class="modal">
+        <div class="modal-content">
+            <span class="close-button">Cancelar</span>
+            <h1>Cadastrar Curso</h1>
+            <form >
+                <div class="user__details">
+                    <div class="input__box1">
+                        <span class="details">Nome:</span>
+                        <input type="text" placeholder="Ex: Desenvolvimento de Sistemas" pattern="[a-zA-Z\s]+" name="nome" id="nome" required >
+                    </div>
+                    <div class="input__box">
+                        <span class="details">Eixo:</span>
+                        <input type="text" placeholder="Ex: Técnico/Técnologo" name="tipo" id="tipo"  required>
+                    </div>
+                    <div class="input__box">
+                        <span class="details">Código da Turma:</span>
+                        <input type="text" placeholder="Ex: 0222 "  required onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    </div>
+                    <div class="input__box">
+                        <span class="details">Turno:</span>
+                        <input type="text" placeholder="Ex: Diurno" required>
+                    </div>
+                    <div class="input__box">
+                        <span class="details">Sala:</span>
+                        <input type="text" placeholder="Ex: Sala 16 ou Laboratório 16" required>
+                        
+                    </div>
+                </div>
+                <div class="button">
+                    <input type="submit" value="Salvar">
+                </div>
+                <div class="button3">
+                    <input type="reset">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="modal.js"></script>
+
+
+</body>
+
+</html>
