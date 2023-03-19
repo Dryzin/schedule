@@ -90,9 +90,9 @@ $(function () {
 
             // Verifica se a data de fim selecionada está no futuro ou não
             if (moment(arg.end).isBefore(moment())) {
-<<<<<<< Updated upstream
+
                 alert('A data de término selecionada já passou!');
-=======
+
                 // alert('A data de término selecionada já passou!');
                 // Exibe o modal de aviso
                 $('#alerta-modal').modal('show');
@@ -105,7 +105,7 @@ $(function () {
 
                 // // Esconde o formulário
                 // $('#popup-container').hide();
->>>>>>> Stashed changes
+
                 return;
             }
             // Verifica se a data selecionada é um feriado
@@ -595,6 +595,48 @@ $(function () {
 
 
 
+// buscar o ra_user e o nome do professor
+
+var isTitleLoaded = false; // Inicialmente definido como falso
+
+document.getElementById("title").addEventListener("click", function () {
+    // Verificar se o título já foi carregado
+    if (!isTitleLoaded) {
+        isTitleLoaded = true; // Definir como verdadeiro para evitar futuras chamadas
+        // Fazer uma solicitação ao servidor para recuperar as informações dos docentes
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                // Analisar a resposta JSON do servidor para obter as informações dos docentes
+                var response = JSON.parse(this.responseText);
+                if (response.length > 0) {
+                    // Adicionar as opções ao elemento "select"
+                    var select = document.getElementById("title");
+                    for (var i = 0; i < response.length; i++) {
+                        var option = document.createElement("option");
+                        option.value = response[i].ra_user;
+                        option.text = response[i].nome;
+                        select.appendChild(option);
+                    }
+
+                    // Atualizar o valor do campo de entrada "title" quando uma opção for selecionada
+                    select.addEventListener("change", function () {
+                        var selectedOption = select.options[select.selectedIndex];
+                        var name = selectedOption.text;
+                        document.getElementById("title").value = selectedOption.value;
+                        document.getElementById("docente-name").innerHTML = name; //adiciona o nome do docente ao elemento de texto
+                    });
+
+                }
+                else {
+                    alert("Nenhum docente encontrado.");
+                }
+            }
+        }
+        xhr.open("GET", "http://localhost/schedule/buscar_usuario.php", true);
+        xhr.send();
+    }
+});
 
 
     //Arraste e redimensionamento de eventos
