@@ -28,7 +28,7 @@ FOREIGN KEY (ra) REFERENCES usuario(ra_user)
 CREATE TABLE turma (
 id INT PRIMARY KEY,
 nome VARCHAR(255),
-tipo ENUM('Trilhas', 'Aprendizagem', 'PSG,', 'Pago', 'MBA'),
+tipo ENUM('Trilhas', 'Aprendizagem', 'PSG', 'Pago', 'MBA'),
 sala VARCHAR(25),
 turno VARCHAR(25),
 carga_horaria Time
